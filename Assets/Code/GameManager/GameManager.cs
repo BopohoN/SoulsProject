@@ -12,6 +12,29 @@ namespace Code.GameManager
         void FixedUpdate();
         void OnDispose();
     }
+
+    public abstract class BaseManager : IBaseManager
+    {
+        public abstract void OnStart();
+        protected bool IsComplete { get; set; }
+
+        public void LogicUpdate()
+        {
+            
+        }
+
+        public void PresentationUpdate()
+        {
+            
+        }
+
+        public void FixedUpdate()
+        {
+            
+        }
+
+        public abstract void OnDispose();
+    }
     
     public class GameManager : MonoBehaviour
     {
@@ -22,7 +45,9 @@ namespace Code.GameManager
         {
             m_BaseManagers = new List<IBaseManager>
             {
+                new AssetManager(),
                 new PlayerInputManager(),
+                new PlayerManager(),
             };
         }
 
@@ -65,5 +90,7 @@ namespace Code.GameManager
         }
 
         public static PlayerInputManager PlayerInputManager => _instance.GetMgr<PlayerInputManager>();
+        public static AssetManager AssetManager => _instance.GetMgr<AssetManager>();
+        public static PlayerManager PlayerManager => _instance.GetMgr<PlayerManager>();
     }
 }

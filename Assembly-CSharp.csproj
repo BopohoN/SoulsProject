@@ -41,10 +41,13 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\Code\InputSystemActions\PlayerInputActions.cs" />
      <Compile Include="Assets\Code\GameManager\PlayerInputManager.cs" />
      <Compile Include="Assets\Code\GameManager\GameManager.cs" />
-     <Compile Include="Assets\Code\InputSystemActions\PlayerInputActions.cs" />
      <Compile Include="Assets\Code\TestingInputSystem.cs" />
+     <Compile Include="Assets\Code\GameManager\PlayerManager.cs" />
+     <Compile Include="Assets\Code\GameManager\AssetHandler.cs" />
+     <Compile Include="Assets\Code\GameManager\AssetManager.cs" />
      <None Include="Assets\Art\Shaders\Built-in_RP\Triplanar.shader" />
      <None Include="Assets\Art\Shaders\Built-in_RP\ArmatureShader.shader" />
      <Reference Include="UnityEngine">
@@ -731,8 +734,14 @@
      <Reference Include="Unity.EditorCoroutines.Editor">
      <HintPath>F:\DarkSoulsProject\DarkSouls\Library\ScriptAssemblies\Unity.EditorCoroutines.Editor.dll</HintPath>
      </Reference>
+     <Reference Include="Cinemachine">
+     <HintPath>F:\DarkSoulsProject\DarkSouls\Library\ScriptAssemblies\Cinemachine.dll</HintPath>
+     </Reference>
      <Reference Include="Unity.Services.Core.Analytics">
      <HintPath>F:\DarkSoulsProject\DarkSouls\Library\ScriptAssemblies\Unity.Services.Core.Analytics.dll</HintPath>
+     </Reference>
+     <Reference Include="com.unity.cinemachine.editor">
+     <HintPath>F:\DarkSoulsProject\DarkSouls\Library\ScriptAssemblies\com.unity.cinemachine.editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualScripting.Shared.Editor">
      <HintPath>F:\DarkSoulsProject\DarkSouls\Library\ScriptAssemblies\Unity.VisualScripting.Shared.Editor.dll</HintPath>
@@ -749,11 +758,23 @@
      <Reference Include="Unity.VisualScripting.State">
      <HintPath>F:\DarkSoulsProject\DarkSouls\Library\ScriptAssemblies\Unity.VisualScripting.State.dll</HintPath>
      </Reference>
-     <Reference Include="com.unity.cinemachine.editor">
-     <HintPath>F:\DarkSoulsProject\DarkSouls\Library\ScriptAssemblies\com.unity.cinemachine.editor.dll</HintPath>
+     <Reference Include="Unity.Addressables">
+     <HintPath>F:\DarkSoulsProject\DarkSouls\Library\ScriptAssemblies\Unity.Addressables.dll</HintPath>
      </Reference>
-     <Reference Include="Cinemachine">
-     <HintPath>F:\DarkSoulsProject\DarkSouls\Library\ScriptAssemblies\Cinemachine.dll</HintPath>
+     <Reference Include="Unity.Addressables.Editor">
+     <HintPath>F:\DarkSoulsProject\DarkSouls\Library\ScriptAssemblies\Unity.Addressables.Editor.dll</HintPath>
+     </Reference>
+     <Reference Include="UnityEditor.CacheServer">
+     <HintPath>F:\DarkSoulsProject\DarkSouls\Library\ScriptAssemblies\UnityEditor.CacheServer.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.ResourceManager">
+     <HintPath>F:\DarkSoulsProject\DarkSouls\Library\ScriptAssemblies\Unity.ResourceManager.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.ScriptableBuildPipeline">
+     <HintPath>F:\DarkSoulsProject\DarkSouls\Library\ScriptAssemblies\Unity.ScriptableBuildPipeline.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.ScriptableBuildPipeline.Editor">
+     <HintPath>F:\DarkSoulsProject\DarkSouls\Library\ScriptAssemblies\Unity.ScriptableBuildPipeline.Editor.dll</HintPath>
      </Reference>
   </ItemGroup>
   <ItemGroup>
