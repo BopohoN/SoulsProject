@@ -2,7 +2,7 @@
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Code.GameManager
+namespace Code.GameBase
 {
     public class AssetManager : BaseManager
     {

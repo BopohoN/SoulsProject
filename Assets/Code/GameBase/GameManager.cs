@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Code.GameManager
+namespace Code.GameBase
 {
     public interface IBaseManager
     {
@@ -49,6 +48,7 @@ namespace Code.GameManager
                 new PlayerInputManager(),
                 new PlayerManager(),
             };
+            _instance = this;
         }
 
         public T GetMgr<T>()

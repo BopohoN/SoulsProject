@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace Code.GameManager
+namespace Code.GameBase
 {
     public static class AssetHandler
     {
