@@ -20,7 +20,11 @@ namespace Code
 
         private void Update()
         {
+            if (m_PlayerInputMgr.PlayerMovementVector == Vector2.zero)
+                return;
             m_Animator.SetFloat(Forward, m_PlayerInputMgr.PlayerMovementVector.magnitude);
+            m_Model.rotation = Quaternion.LookRotation(new Vector3(m_PlayerInputMgr.PlayerMovementVector.x, 0f,
+                m_PlayerInputMgr.PlayerMovementVector.y),Vector3.up);
         }
     }
 }
