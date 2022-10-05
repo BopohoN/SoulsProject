@@ -49,6 +49,8 @@
      <Compile Include="Assets\Code\GameBase\AssetHandler.cs" />
      <Compile Include="Assets\Code\PlayerController.cs" />
      <Compile Include="Assets\Code\AnimatorController.cs" />
+     <Compile Include="Assets\Code\GameBase\CameraManager.cs" />
+     <Compile Include="Assets\Code\Utility\MovementUtility.cs" />
      <None Include="Assets\Art\Shaders\Built-in_RP\Triplanar.shader" />
      <None Include="Assets\Art\Shaders\Built-in_RP\ArmatureShader.shader" />
      <Reference Include="UnityEngine">

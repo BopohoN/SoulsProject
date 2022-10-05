@@ -1,5 +1,5 @@
-﻿using System;
-using Code.GameBase;
+﻿using Code.GameBase;
+using Code.Utility;
 using UnityEngine;
 
 namespace Code
@@ -35,9 +35,10 @@ namespace Code
             m_MoveDir.Normalize();
 
             var speed = movementSpeed;
-            m_MoveDir *= speed;
+            var moveAmount = MovementUtility.ClampMovement(m_InputManager.MoveAmount);
+            m_MoveDir *= speed * moveAmount;
 
-            var projectedVelocity = Vector3.ProjectOnPlane(m_MoveDir, m_NormalVector);
+            var projectedVelocity = Vector3.ProjectOnPlane(new Vector3(m_MoveDir.x, 0, m_MoveDir.z), m_NormalVector);
             m_RigidBody.velocity = projectedVelocity;
 
             m_AnimatorController.UpdateAnimatorValue(m_InputManager.MoveAmount, 0);
