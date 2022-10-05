@@ -23,9 +23,22 @@ namespace Code.GameBase
                 m_InputActions = new PlayerInputActions();
                 m_InputActions.PlayerMovement.Movement.performed += PlayerMovement;
                 m_InputActions.PlayerMovement.Movement.canceled += PlayerMovementCancel;
+
+                m_InputActions.PlayerMovement.Camera.performed += CameraMovement;
+                m_InputActions.PlayerMovement.Camera.canceled += CameraMovementCancel;
             }
 
             m_InputActions.PlayerMovement.Enable();
+        }
+
+        private void CameraMovementCancel(InputAction.CallbackContext ctx)
+        {
+            m_CameraInput = Vector2.zero;
+        }
+
+        private void CameraMovement(InputAction.CallbackContext ctx)
+        {
+            m_CameraInput = ctx.ReadValue<Vector2>();
         }
 
         private void PlayerMovement(InputAction.CallbackContext ctx)

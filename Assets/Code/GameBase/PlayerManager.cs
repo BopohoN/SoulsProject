@@ -4,12 +4,12 @@ namespace Code.GameBase
 {
     public class PlayerManager : BaseManager
     {
-        private GameObject m_Player;
+        public GameObject Player { get; private set; }
 
         public override void OnStart()
         {
-            m_Player = GameManager.AssetManager.InitializeObject("PlayerArmature");
-            m_Player.AddComponent<PlayerController>();
+            Player = GameManager.AssetManager.InitializeObject("PlayerArmature");
+            Player.AddComponent<PlayerController>();
         }
 
         public override void OnDispose()

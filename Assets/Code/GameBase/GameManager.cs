@@ -47,6 +47,7 @@ namespace Code.GameBase
                 new AssetManager(),
                 new PlayerInputManager(),
                 new PlayerManager(),
+                new CameraManager(),
             };
             _instance = this;
         }
