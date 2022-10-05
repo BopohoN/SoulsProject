@@ -46,9 +46,9 @@
      <Compile Include="Assets\Code\GameBase\PlayerManager.cs" />
      <Compile Include="Assets\Code\GameBase\PlayerInputManager.cs" />
      <Compile Include="Assets\Code\GameBase\GameManager.cs" />
-     <Compile Include="Assets\Code\TestingInputSystem.cs" />
      <Compile Include="Assets\Code\GameBase\AssetHandler.cs" />
      <Compile Include="Assets\Code\PlayerController.cs" />
+     <Compile Include="Assets\Code\AnimatorController.cs" />
      <None Include="Assets\Art\Shaders\Built-in_RP\Triplanar.shader" />
      <None Include="Assets\Art\Shaders\Built-in_RP\ArmatureShader.shader" />
      <Reference Include="UnityEngine">

@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-namespace InputSystemActions
+namespace Code.InputSystemActions
 {
     public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     {
@@ -26,22 +26,22 @@ namespace InputSystemActions
     ""name"": ""PlayerInputActions"",
     ""maps"": [
         {
-            ""name"": ""Player"",
-            ""id"": ""86548f05-1b51-4af5-aaa4-04604c1c1913"",
+            ""name"": ""Player Movement"",
+            ""id"": ""bec8dcd8-01d5-4ca7-8dc2-18636db17027"",
             ""actions"": [
-                {
-                    ""name"": ""Roll"",
-                    ""type"": ""Button"",
-                    ""id"": ""504b6f06-8abe-4e77-b78f-4a8141aeb5b7"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
                 {
                     ""name"": ""Movement"",
                     ""type"": ""Value"",
-                    ""id"": ""ac431efa-711f-4465-9b81-c32c151c9a81"",
+                    ""id"": ""4c740c64-fc4f-49b1-b3eb-04c52253ca91"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Camera"",
+                    ""type"": ""Value"",
+                    ""id"": ""9ebbb9bd-0896-45dc-889f-5d670413e5cf"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -51,88 +51,22 @@ namespace InputSystemActions
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""b4f1467c-168f-4f46-a014-44555930a0a5"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""id"": ""e5e939a0-a781-4a4e-ab1a-4cc74df28bd6"",
+                    ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Roll"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""188797ec-05ad-4146-81cc-81a3e3ba7119"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Roll"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""2D Vector"",
-                    ""id"": ""ef998fe4-ca97-47b3-b4b0-381d4aabbd41"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone"",
                     ""groups"": """",
-                    ""action"": ""Movement"",
-                    ""isComposite"": true,
+                    ""action"": ""Camera"",
+                    ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""up"",
-                    ""id"": ""a4fb6b6b-6c9a-4fe8-94f5-8d5cdf992207"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""c9e3fb20-7ef7-4cb9-bf14-8fed60c5967c"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""baa2e756-ab06-4d07-b0bc-62dd9b1c84a4"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""bd1f3c77-0dfd-42cf-acbc-69a886fd69c1"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": """",
-                    ""id"": ""333963a7-e3ac-4ff3-92b2-475532a1026a"",
+                    ""id"": ""ecbaf5ac-065f-42ef-9eaa-c4234f537a91"",
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": ""StickDeadzone"",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": """",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -140,35 +74,12 @@ namespace InputSystemActions
             ]
         }
     ],
-    ""controlSchemes"": [
-        {
-            ""name"": ""Keyboard"",
-            ""bindingGroup"": ""Keyboard"",
-            ""devices"": [
-                {
-                    ""devicePath"": ""<Keyboard>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""Gamepad"",
-            ""bindingGroup"": ""Gamepad"",
-            ""devices"": [
-                {
-                    ""devicePath"": ""<Gamepad>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                }
-            ]
-        }
-    ]
+    ""controlSchemes"": []
 }");
-            // Player
-            m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-            m_Player_Roll = m_Player.FindAction("Roll", throwIfNotFound: true);
-            m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
+            // Player Movement
+            m_PlayerMovement = asset.FindActionMap("Player Movement", throwIfNotFound: true);
+            m_PlayerMovement_Movement = m_PlayerMovement.FindAction("Movement", throwIfNotFound: true);
+            m_PlayerMovement_Camera = m_PlayerMovement.FindAction("Camera", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -225,68 +136,50 @@ namespace InputSystemActions
             return asset.FindBinding(bindingMask, out action);
         }
 
-        // Player
-        private readonly InputActionMap m_Player;
-        private IPlayerActions m_PlayerActionsCallbackInterface;
-        private readonly InputAction m_Player_Roll;
-        private readonly InputAction m_Player_Movement;
-        public struct PlayerActions
+        // Player Movement
+        private readonly InputActionMap m_PlayerMovement;
+        private IPlayerMovementActions m_PlayerMovementActionsCallbackInterface;
+        private readonly InputAction m_PlayerMovement_Movement;
+        private readonly InputAction m_PlayerMovement_Camera;
+        public struct PlayerMovementActions
         {
             private @PlayerInputActions m_Wrapper;
-            public PlayerActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-            public InputAction @Roll => m_Wrapper.m_Player_Roll;
-            public InputAction @Movement => m_Wrapper.m_Player_Movement;
-            public InputActionMap Get() { return m_Wrapper.m_Player; }
+            public PlayerMovementActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Movement => m_Wrapper.m_PlayerMovement_Movement;
+            public InputAction @Camera => m_Wrapper.m_PlayerMovement_Camera;
+            public InputActionMap Get() { return m_Wrapper.m_PlayerMovement; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
             public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(PlayerActions set) { return set.Get(); }
-            public void SetCallbacks(IPlayerActions instance)
+            public static implicit operator InputActionMap(PlayerMovementActions set) { return set.Get(); }
+            public void SetCallbacks(IPlayerMovementActions instance)
             {
-                if (m_Wrapper.m_PlayerActionsCallbackInterface != null)
+                if (m_Wrapper.m_PlayerMovementActionsCallbackInterface != null)
                 {
-                    @Roll.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
-                    @Roll.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
-                    @Roll.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
-                    @Movement.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
-                    @Movement.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
-                    @Movement.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
+                    @Movement.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnMovement;
+                    @Movement.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnMovement;
+                    @Movement.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnMovement;
+                    @Camera.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnCamera;
+                    @Camera.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnCamera;
+                    @Camera.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnCamera;
                 }
-                m_Wrapper.m_PlayerActionsCallbackInterface = instance;
+                m_Wrapper.m_PlayerMovementActionsCallbackInterface = instance;
                 if (instance != null)
                 {
-                    @Roll.started += instance.OnRoll;
-                    @Roll.performed += instance.OnRoll;
-                    @Roll.canceled += instance.OnRoll;
                     @Movement.started += instance.OnMovement;
                     @Movement.performed += instance.OnMovement;
                     @Movement.canceled += instance.OnMovement;
+                    @Camera.started += instance.OnCamera;
+                    @Camera.performed += instance.OnCamera;
+                    @Camera.canceled += instance.OnCamera;
                 }
             }
         }
-        public PlayerActions @Player => new PlayerActions(this);
-        private int m_KeyboardSchemeIndex = -1;
-        public InputControlScheme KeyboardScheme
+        public PlayerMovementActions @PlayerMovement => new PlayerMovementActions(this);
+        public interface IPlayerMovementActions
         {
-            get
-            {
-                if (m_KeyboardSchemeIndex == -1) m_KeyboardSchemeIndex = asset.FindControlSchemeIndex("Keyboard");
-                return asset.controlSchemes[m_KeyboardSchemeIndex];
-            }
-        }
-        private int m_GamepadSchemeIndex = -1;
-        public InputControlScheme GamepadScheme
-        {
-            get
-            {
-                if (m_GamepadSchemeIndex == -1) m_GamepadSchemeIndex = asset.FindControlSchemeIndex("Gamepad");
-                return asset.controlSchemes[m_GamepadSchemeIndex];
-            }
-        }
-        public interface IPlayerActions
-        {
-            void OnRoll(InputAction.CallbackContext context);
             void OnMovement(InputAction.CallbackContext context);
+            void OnCamera(InputAction.CallbackContext context);
         }
     }
 }

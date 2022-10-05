@@ -17,17 +17,17 @@ namespace Code.GameBase
         public abstract void OnStart();
         protected bool IsComplete { get; set; }
 
-        public void LogicUpdate()
+        public virtual void LogicUpdate()
         {
             
         }
 
-        public void PresentationUpdate()
+        public virtual void PresentationUpdate()
         {
             
         }
 
-        public void FixedUpdate()
+        public virtual void FixedUpdate()
         {
             
         }

@@ -1,45 +1,60 @@
-﻿using InputSystemActions;
+﻿using Code.InputSystemActions;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Code.GameBase
 {
-    public class PlayerInputManager:IBaseManager
+    public class PlayerInputManager: BaseManager
     {
-        public Vector2 PlayerMovementVector { get; private set; }
-        private PlayerInputActions m_PlayerInputActions;
+        public float Horizontal;
+        public float Vertical;
+        public float MoveAmount;
+        public float MouseX;
+        public float MouseY;
 
-        private float velocityX;
-        private float velocityY;
-
-        private const float Attenuation = 0.1f;
-
-        public void OnStart()
+        private PlayerInputActions m_InputActions;
+        private Vector2 m_MovementInput;
+        private Vector2 m_CameraInput;
+        
+        public override void OnStart()
         {
-            m_PlayerInputActions = new PlayerInputActions();
-            m_PlayerInputActions.Player.Enable();
+            if (m_InputActions == null)
+            {
+                m_InputActions = new PlayerInputActions();
+                m_InputActions.PlayerMovement.Movement.performed += PlayerMovement;
+                m_InputActions.PlayerMovement.Movement.canceled += PlayerMovementCancel;
+            }
+
+            m_InputActions.PlayerMovement.Enable();
         }
 
-        public void LogicUpdate()
+        private void PlayerMovement(InputAction.CallbackContext ctx)
         {
-            
+            m_MovementInput = ctx.ReadValue<Vector2>();
         }
 
-        public void PresentationUpdate()
+        private void PlayerMovementCancel(InputAction.CallbackContext ctx)
         {
-            
+            m_MovementInput = Vector2.zero;
         }
 
-        public void FixedUpdate()
+        public override void LogicUpdate()
         {
-            var inputVector = m_PlayerInputActions.Player.Movement.ReadValue<Vector2>();
-            var currentX = Mathf.SmoothDamp(PlayerMovementVector.x, inputVector.x, ref velocityX, Attenuation);
-            var currentY = Mathf.SmoothDamp(PlayerMovementVector.y, inputVector.y, ref velocityY, Attenuation);
-            PlayerMovementVector = new Vector2(currentX, currentY);
+            MoveInput(Time.deltaTime);
         }
 
-        public void OnDispose()
+        public override void OnDispose()
         {
-            
+            m_InputActions.PlayerMovement.Disable();
+        }
+
+        private void MoveInput(float delta)
+        {
+            Horizontal = m_MovementInput.x;
+            Vertical = m_MovementInput.y;
+            MoveAmount = Mathf.Clamp01(Mathf.Abs(Horizontal) + Mathf.Abs(Vertical));
+            MouseX = m_CameraInput.x;
+            MouseY = m_CameraInput.y;
         }
     }
 }
