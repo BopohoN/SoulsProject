@@ -10,6 +10,7 @@ namespace Code.GameBase
         private Transform m_CameraPivotTransform;
         private Vector3 m_CameraTransformPosition;
         private LayerMask m_IgnoreLayers;
+        private Vector3 m_CameraFollowVelocity = Vector3.zero;
 
         public float LookSpeed = 0.1f;
         public float FollowSpeed = 0.1f;
@@ -39,7 +40,8 @@ namespace Code.GameBase
 
         private void FollowTarget(float delta)
         {
-            var targetPosition = Vector3.Lerp(m_Transform.position, m_TargetTransform.position, delta / FollowSpeed);
+            var targetPosition = Vector3.SmoothDamp(m_Transform.position, m_TargetTransform.position,
+                ref m_CameraFollowVelocity, delta / FollowSpeed);
             m_Transform.position = targetPosition;
         }
 
