@@ -2,6 +2,7 @@
 using Code.InputSystemActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 
 namespace Code.GameBase
 {
@@ -13,7 +14,9 @@ namespace Code.GameBase
         public float MouseX;
         public float MouseY;
 
-        public event Action<InputAction.CallbackContext> OnBInput;
+        public event Action<InputAction.CallbackContext> OnBPressed;
+        public event Action<InputAction.CallbackContext> OnBHold;
+        public event Action<InputAction.CallbackContext> OnBRelease;
         
         private PlayerInputActions m_InputActions;
         private Vector2 m_MovementInput;
@@ -30,7 +33,19 @@ namespace Code.GameBase
                 m_InputActions.PlayerMovement.Camera.performed += ctx => m_CameraInput = ctx.ReadValue<Vector2>();
                 m_InputActions.PlayerMovement.Camera.canceled += _ => m_CameraInput = Vector2.zero;
 
-                m_InputActions.PlayerActions.Roll.started += ctx => OnBInput?.Invoke(ctx);
+                m_InputActions.PlayerActions.RollAndSprint.performed += ctx =>
+                {
+                    if (ctx.interaction is HoldInteraction)
+                        OnBHold?.Invoke(ctx);
+                    else if (ctx.interaction is TapInteraction)
+                        OnBPressed?.Invoke(ctx);
+                };
+
+                m_InputActions.PlayerActions.RollAndSprint.canceled += ctx =>
+                {
+                    OnBRelease?.Invoke(ctx);
+                };
+
             }
 
             m_InputActions.PlayerMovement.Enable();

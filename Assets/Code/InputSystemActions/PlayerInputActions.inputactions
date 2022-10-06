@@ -54,7 +54,7 @@
             "id": "e25be114-4ca5-4abf-bfff-4adb87dfef1f",
             "actions": [
                 {
-                    "name": "Roll",
+                    "name": "RollAndSprint",
                     "type": "Button",
                     "id": "defe3aa8-6e1b-4326-ab92-2a7a4bad2e8c",
                     "expectedControlType": "Button",
@@ -68,10 +68,10 @@
                     "name": "",
                     "id": "f5134b05-c6f4-42ae-81e4-b65296848592",
                     "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
+                    "interactions": "Tap,Hold",
                     "processors": "",
                     "groups": "",
-                    "action": "Roll",
+                    "action": "RollAndSprint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

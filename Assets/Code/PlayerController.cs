@@ -14,10 +14,13 @@ namespace Code
         
         [Header("Stats")]
         [SerializeField] private float movementSpeed = 5f;
-        [SerializeField] private float rotationSpeed = 10;
+        [SerializeField] private float sprintingSpeed = 7f;
+        [SerializeField] private float rotationSpeed = 10f;
         private Rigidbody m_RigidBody;
         private AnimatorController m_AnimatorController;
         private PlayerInputManager m_InputManager;
+
+        private bool m_IsSprinting;
 
         private void Start()
         {
@@ -27,7 +30,9 @@ namespace Code
             m_InputManager = GameManager.PlayerInputManager;
             m_Camera = Camera.main.transform;
 
-            m_InputManager.OnBInput += HandleRollingAndSprinting;
+            m_InputManager.OnBPressed += HandleRollingAndSprinting;
+            m_InputManager.OnBHold += HandleSprint;
+            m_InputManager.OnBRelease += ResetRollAndSprint;
         }
 
         private void OnAnimatorMovement(Animator animator)
@@ -43,6 +48,7 @@ namespace Code
         private void Update()
         {
             HandleMovement(Time.deltaTime);
+            m_AnimatorController.SetCanRotate(!m_AnimatorController.IsInteractingFlag);
         }
 
         private void HandlerRotation(float delta)
@@ -73,20 +79,30 @@ namespace Code
 
             var speed = movementSpeed;
             var moveAmount = MovementUtility.ClampMovement(m_InputManager.MoveAmount);
-            m_MoveDir *= speed * moveAmount;
+            m_MoveDir *= m_IsSprinting ? sprintingSpeed : speed * moveAmount;
 
             var projectedVelocity = Vector3.ProjectOnPlane(new Vector3(m_MoveDir.x, 0, m_MoveDir.z), m_NormalVector);
             m_RigidBody.velocity = projectedVelocity;
 
-            m_AnimatorController.UpdateAnimatorValue(m_InputManager.MoveAmount, 0);
+            m_AnimatorController.UpdateAnimatorValue(m_InputManager.MoveAmount, 0, m_IsSprinting);
             if (m_AnimatorController.CanRotate)
                 HandlerRotation(delta);
         }
+        
+        private void ResetRollAndSprint(InputAction.CallbackContext ctx)
+        {
+            m_IsSprinting = false;
+        }
 
+        private void HandleSprint(InputAction.CallbackContext ctx)
+        {
+            m_IsSprinting = true;
+        }
+        
         private void HandleRollingAndSprinting(InputAction.CallbackContext ctx)
         {
             if (m_AnimatorController.IsInteractingFlag) return;
-            
+
             m_MoveDir = m_Camera.forward * m_InputManager.Vertical;
             m_MoveDir += m_Camera.right * m_InputManager.Horizontal;
 
@@ -103,7 +119,7 @@ namespace Code
 
         private void OnDestroy()
         {
-            m_InputManager.OnBInput -= HandleRollingAndSprinting;
+            m_InputManager.OnBPressed -= HandleRollingAndSprinting;
         }
     }
 }

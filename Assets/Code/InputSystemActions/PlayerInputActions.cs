@@ -78,7 +78,7 @@ namespace Code.InputSystemActions
             ""id"": ""e25be114-4ca5-4abf-bfff-4adb87dfef1f"",
             ""actions"": [
                 {
-                    ""name"": ""Roll"",
+                    ""name"": ""RollAndSprint"",
                     ""type"": ""Button"",
                     ""id"": ""defe3aa8-6e1b-4326-ab92-2a7a4bad2e8c"",
                     ""expectedControlType"": ""Button"",
@@ -92,10 +92,10 @@ namespace Code.InputSystemActions
                     ""name"": """",
                     ""id"": ""f5134b05-c6f4-42ae-81e4-b65296848592"",
                     ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap,Hold"",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Roll"",
+                    ""action"": ""RollAndSprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -110,7 +110,7 @@ namespace Code.InputSystemActions
             m_PlayerMovement_Camera = m_PlayerMovement.FindAction("Camera", throwIfNotFound: true);
             // Player Actions
             m_PlayerActions = asset.FindActionMap("Player Actions", throwIfNotFound: true);
-            m_PlayerActions_Roll = m_PlayerActions.FindAction("Roll", throwIfNotFound: true);
+            m_PlayerActions_RollAndSprint = m_PlayerActions.FindAction("RollAndSprint", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -211,12 +211,12 @@ namespace Code.InputSystemActions
         // Player Actions
         private readonly InputActionMap m_PlayerActions;
         private IPlayerActionsActions m_PlayerActionsActionsCallbackInterface;
-        private readonly InputAction m_PlayerActions_Roll;
+        private readonly InputAction m_PlayerActions_RollAndSprint;
         public struct PlayerActionsActions
         {
             private @PlayerInputActions m_Wrapper;
             public PlayerActionsActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-            public InputAction @Roll => m_Wrapper.m_PlayerActions_Roll;
+            public InputAction @RollAndSprint => m_Wrapper.m_PlayerActions_RollAndSprint;
             public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -226,16 +226,16 @@ namespace Code.InputSystemActions
             {
                 if (m_Wrapper.m_PlayerActionsActionsCallbackInterface != null)
                 {
-                    @Roll.started -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRoll;
-                    @Roll.performed -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRoll;
-                    @Roll.canceled -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRoll;
+                    @RollAndSprint.started -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRollAndSprint;
+                    @RollAndSprint.performed -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRollAndSprint;
+                    @RollAndSprint.canceled -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRollAndSprint;
                 }
                 m_Wrapper.m_PlayerActionsActionsCallbackInterface = instance;
                 if (instance != null)
                 {
-                    @Roll.started += instance.OnRoll;
-                    @Roll.performed += instance.OnRoll;
-                    @Roll.canceled += instance.OnRoll;
+                    @RollAndSprint.started += instance.OnRollAndSprint;
+                    @RollAndSprint.performed += instance.OnRollAndSprint;
+                    @RollAndSprint.canceled += instance.OnRollAndSprint;
                 }
             }
         }
@@ -247,7 +247,7 @@ namespace Code.InputSystemActions
         }
         public interface IPlayerActionsActions
         {
-            void OnRoll(InputAction.CallbackContext context);
+            void OnRollAndSprint(InputAction.CallbackContext context);
         }
     }
 }

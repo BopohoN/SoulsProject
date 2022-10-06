@@ -1,5 +1,4 @@
 ﻿using System;
-using Code.GameBase;
 using Code.Utility;
 using UnityEngine;
 
@@ -23,10 +22,17 @@ namespace Code
             CanRotate = true;
         }
 
-        public void UpdateAnimatorValue(float verticalMovement, float horizontalMovement)
+        public void UpdateAnimatorValue(float verticalMovement, float horizontalMovement,bool isSprinting)
         {
             var v = MovementUtility.ClampMovement(verticalMovement);
             var h = MovementUtility.ClampMovement(horizontalMovement);
+            
+            if (isSprinting)
+            {
+                v = 2;
+                h = horizontalMovement;
+            }
+            
             m_Anim.SetFloat(Vertical, v, 0.1f, Time.deltaTime);
             m_Anim.SetFloat(Horizontal, h, 0.1f, Time.deltaTime);
         }
