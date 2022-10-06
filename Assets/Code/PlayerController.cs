@@ -13,8 +13,9 @@ namespace Code
         private Vector3 m_MoveDir;
         
         [Header("Stats")]
-        [SerializeField] private float movementSpeed = 5f;
-        [SerializeField] private float sprintingSpeed = 7f;
+        [SerializeField] private float walkSpeed = 1.5f;
+        [SerializeField] private float fullMoveSpeed = 4.5f;
+        [SerializeField] private float sprintingSpeed = 6f;
         [SerializeField] private float rotationSpeed = 10f;
         private Rigidbody m_RigidBody;
         private AnimatorController m_AnimatorController;
@@ -77,9 +78,9 @@ namespace Code
             m_MoveDir += m_Camera.right * m_InputManager.Horizontal;
             m_MoveDir.Normalize();
 
-            var speed = movementSpeed;
             var moveAmount = MovementUtility.ClampMovement(m_InputManager.MoveAmount);
-            m_MoveDir *= m_IsSprinting ? sprintingSpeed : speed * moveAmount;
+            var speed = moveAmount >= 0.8f ? fullMoveSpeed : walkSpeed;
+            m_MoveDir *= m_IsSprinting ? sprintingSpeed : speed;
 
             var projectedVelocity = Vector3.ProjectOnPlane(new Vector3(m_MoveDir.x, 0, m_MoveDir.z), m_NormalVector);
             m_RigidBody.velocity = projectedVelocity;
