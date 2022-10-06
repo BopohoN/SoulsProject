@@ -1,20 +1,26 @@
-﻿using Code.Utility;
+﻿using System;
+using Code.GameBase;
+using Code.Utility;
 using UnityEngine;
 
 namespace Code
 {
     public class AnimatorController : MonoBehaviour
     {
-        public bool canRotate;
+        public bool CanRotate { get; private set; }
+        public bool IsInteractingFlag => m_Anim.GetBool(IsInteracting);
         private Animator m_Anim;
+        private Action<Animator> m_OnAnimatorMoveAction;
 
         private static readonly int Horizontal = Animator.StringToHash("Horizontal");
         private static readonly int Vertical = Animator.StringToHash("Vertical");
+        private static readonly int IsInteracting = Animator.StringToHash("IsInteracting");
 
-        public void Initialize()
+        public void Initialize(Action<Animator> onAnimatorMove)
         {
             m_Anim = transform.GetComponent<Animator>();
-            
+            m_OnAnimatorMoveAction = onAnimatorMove;
+            CanRotate = true;
         }
 
         public void UpdateAnimatorValue(float verticalMovement, float horizontalMovement)
@@ -25,9 +31,22 @@ namespace Code
             m_Anim.SetFloat(Horizontal, h, 0.1f, Time.deltaTime);
         }
 
-        public void CanRotate(bool value)
+        public void PlayTargetAnimation(string targetAnim, bool isInteracting)
         {
-            canRotate = value;
+            m_Anim.applyRootMotion = isInteracting;
+            m_Anim.SetBool(IsInteracting, isInteracting);
+            m_Anim.CrossFade(targetAnim, 0.2f);
+        }
+
+        public void SetCanRotate(bool value)
+        {
+            CanRotate = value;
+        }
+
+        private void OnAnimatorMove()
+        {
+            if (!IsInteractingFlag) return;
+            m_OnAnimatorMoveAction?.Invoke(m_Anim);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Code.InputSystemActions;
+﻿using System;
+using Code.InputSystemActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,43 +13,28 @@ namespace Code.GameBase
         public float MouseX;
         public float MouseY;
 
+        public event Action<InputAction.CallbackContext> OnBInput;
+        
         private PlayerInputActions m_InputActions;
         private Vector2 m_MovementInput;
         private Vector2 m_CameraInput;
-        
+
         public override void OnStart()
         {
             if (m_InputActions == null)
             {
                 m_InputActions = new PlayerInputActions();
-                m_InputActions.PlayerMovement.Movement.performed += PlayerMovement;
-                m_InputActions.PlayerMovement.Movement.canceled += PlayerMovementCancel;
+                m_InputActions.PlayerMovement.Movement.performed += ctx => m_MovementInput = ctx.ReadValue<Vector2>();
+                m_InputActions.PlayerMovement.Movement.canceled += _ => m_MovementInput = Vector2.zero;
 
-                m_InputActions.PlayerMovement.Camera.performed += CameraMovement;
-                m_InputActions.PlayerMovement.Camera.canceled += CameraMovementCancel;
+                m_InputActions.PlayerMovement.Camera.performed += ctx => m_CameraInput = ctx.ReadValue<Vector2>();
+                m_InputActions.PlayerMovement.Camera.canceled += _ => m_CameraInput = Vector2.zero;
+
+                m_InputActions.PlayerActions.Roll.started += ctx => OnBInput?.Invoke(ctx);
             }
 
             m_InputActions.PlayerMovement.Enable();
-        }
-
-        private void CameraMovementCancel(InputAction.CallbackContext ctx)
-        {
-            m_CameraInput = Vector2.zero;
-        }
-
-        private void CameraMovement(InputAction.CallbackContext ctx)
-        {
-            m_CameraInput = ctx.ReadValue<Vector2>();
-        }
-
-        private void PlayerMovement(InputAction.CallbackContext ctx)
-        {
-            m_MovementInput = ctx.ReadValue<Vector2>();
-        }
-
-        private void PlayerMovementCancel(InputAction.CallbackContext ctx)
-        {
-            m_MovementInput = Vector2.zero;
+            m_InputActions.PlayerActions.Enable();
         }
 
         public override void LogicUpdate()

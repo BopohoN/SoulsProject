@@ -72,6 +72,34 @@ namespace Code.InputSystemActions
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Player Actions"",
+            ""id"": ""e25be114-4ca5-4abf-bfff-4adb87dfef1f"",
+            ""actions"": [
+                {
+                    ""name"": ""Roll"",
+                    ""type"": ""Button"",
+                    ""id"": ""defe3aa8-6e1b-4326-ab92-2a7a4bad2e8c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""f5134b05-c6f4-42ae-81e4-b65296848592"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Roll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -80,6 +108,9 @@ namespace Code.InputSystemActions
             m_PlayerMovement = asset.FindActionMap("Player Movement", throwIfNotFound: true);
             m_PlayerMovement_Movement = m_PlayerMovement.FindAction("Movement", throwIfNotFound: true);
             m_PlayerMovement_Camera = m_PlayerMovement.FindAction("Camera", throwIfNotFound: true);
+            // Player Actions
+            m_PlayerActions = asset.FindActionMap("Player Actions", throwIfNotFound: true);
+            m_PlayerActions_Roll = m_PlayerActions.FindAction("Roll", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -176,10 +207,47 @@ namespace Code.InputSystemActions
             }
         }
         public PlayerMovementActions @PlayerMovement => new PlayerMovementActions(this);
+
+        // Player Actions
+        private readonly InputActionMap m_PlayerActions;
+        private IPlayerActionsActions m_PlayerActionsActionsCallbackInterface;
+        private readonly InputAction m_PlayerActions_Roll;
+        public struct PlayerActionsActions
+        {
+            private @PlayerInputActions m_Wrapper;
+            public PlayerActionsActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Roll => m_Wrapper.m_PlayerActions_Roll;
+            public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(PlayerActionsActions set) { return set.Get(); }
+            public void SetCallbacks(IPlayerActionsActions instance)
+            {
+                if (m_Wrapper.m_PlayerActionsActionsCallbackInterface != null)
+                {
+                    @Roll.started -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRoll;
+                    @Roll.performed -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRoll;
+                    @Roll.canceled -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRoll;
+                }
+                m_Wrapper.m_PlayerActionsActionsCallbackInterface = instance;
+                if (instance != null)
+                {
+                    @Roll.started += instance.OnRoll;
+                    @Roll.performed += instance.OnRoll;
+                    @Roll.canceled += instance.OnRoll;
+                }
+            }
+        }
+        public PlayerActionsActions @PlayerActions => new PlayerActionsActions(this);
         public interface IPlayerMovementActions
         {
             void OnMovement(InputAction.CallbackContext context);
             void OnCamera(InputAction.CallbackContext context);
+        }
+        public interface IPlayerActionsActions
+        {
+            void OnRoll(InputAction.CallbackContext context);
         }
     }
 }

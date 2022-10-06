@@ -1,6 +1,9 @@
-﻿using Code.GameBase;
+﻿using System;
+using Code.GameBase;
 using Code.Utility;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using PlayerInputManager = Code.GameBase.PlayerInputManager;
 
 namespace Code
 {
@@ -20,9 +23,18 @@ namespace Code
         {
             m_RigidBody = GetComponent<Rigidbody>();
             m_AnimatorController = transform.GetChild(0).GetComponent<AnimatorController>();
-            m_AnimatorController.Initialize();
+            m_AnimatorController.Initialize(OnAnimatorMovement);
             m_InputManager = GameManager.PlayerInputManager;
             m_Camera = Camera.main.transform;
+
+            m_InputManager.OnBInput += HandleRollingAndSprinting;
+        }
+
+        private void OnAnimatorMovement(Animator animator)
+        {
+            m_RigidBody.drag = 0f;
+            var deltaPosition = animator.deltaPosition;
+            m_RigidBody.velocity = new Vector3(deltaPosition.x, 0, deltaPosition.z) / Time.deltaTime;
         }
 
         private Vector3 m_NormalVector;
@@ -30,22 +42,9 @@ namespace Code
 
         private void Update()
         {
-            m_MoveDir = m_Camera.forward * m_InputManager.Vertical;
-            m_MoveDir += m_Camera.right * m_InputManager.Horizontal;
-            m_MoveDir.Normalize();
-
-            var speed = movementSpeed;
-            var moveAmount = MovementUtility.ClampMovement(m_InputManager.MoveAmount);
-            m_MoveDir *= speed * moveAmount;
-
-            var projectedVelocity = Vector3.ProjectOnPlane(new Vector3(m_MoveDir.x, 0, m_MoveDir.z), m_NormalVector);
-            m_RigidBody.velocity = projectedVelocity;
-
-            m_AnimatorController.UpdateAnimatorValue(m_InputManager.MoveAmount, 0);
-            if (m_AnimatorController.canRotate)
-                HandlerRotation(Time.deltaTime);
+            HandleMovement(Time.deltaTime);
         }
-        
+
         private void HandlerRotation(float delta)
         {
             var moveOverride = m_InputManager.Vertical;
@@ -66,5 +65,45 @@ namespace Code
             transform.rotation = targetRotation;
         }
 
+        private void HandleMovement(float delta)
+        {
+            m_MoveDir = m_Camera.forward * m_InputManager.Vertical;
+            m_MoveDir += m_Camera.right * m_InputManager.Horizontal;
+            m_MoveDir.Normalize();
+
+            var speed = movementSpeed;
+            var moveAmount = MovementUtility.ClampMovement(m_InputManager.MoveAmount);
+            m_MoveDir *= speed * moveAmount;
+
+            var projectedVelocity = Vector3.ProjectOnPlane(new Vector3(m_MoveDir.x, 0, m_MoveDir.z), m_NormalVector);
+            m_RigidBody.velocity = projectedVelocity;
+
+            m_AnimatorController.UpdateAnimatorValue(m_InputManager.MoveAmount, 0);
+            if (m_AnimatorController.CanRotate)
+                HandlerRotation(delta);
+        }
+
+        private void HandleRollingAndSprinting(InputAction.CallbackContext ctx)
+        {
+            if (m_AnimatorController.IsInteractingFlag) return;
+            
+            m_MoveDir = m_Camera.forward * m_InputManager.Vertical;
+            m_MoveDir += m_Camera.right * m_InputManager.Horizontal;
+
+            if (m_InputManager.MoveAmount > 0)
+            {
+                m_AnimatorController.PlayTargetAnimation("Rolling", true);
+                transform.rotation = Quaternion.LookRotation(new Vector3(m_MoveDir.x, 0f, m_MoveDir.z));
+            }
+            else
+            {
+                m_AnimatorController.PlayTargetAnimation("BackStep", true);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            m_InputManager.OnBInput -= HandleRollingAndSprinting;
+        }
     }
 }
