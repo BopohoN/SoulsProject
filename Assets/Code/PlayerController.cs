@@ -9,10 +9,16 @@ namespace Code
 {
     public class PlayerController : MonoBehaviour
     {
+        private float m_FallingTimer;
+        private CapsuleCollider m_Collider;
         private Transform m_Camera;
         private Vector3 m_MoveDir;
+        private LayerMask m_IgnoreLayerMask;
+
+        private bool m_IsGround;
         
         [Header("Stats")]
+        [SerializeField] private float gravity = 9.8f;
         [SerializeField] private float walkSpeed = 1.5f;
         [SerializeField] private float fullMoveSpeed = 4.5f;
         [SerializeField] private float sprintingSpeed = 6f;
@@ -23,13 +29,19 @@ namespace Code
 
         private bool m_IsSprinting;
 
+        private const float GroundDetectPointOffset = 0.3f;
+        private const float GroundDetectMinimumDistance = 0.5f;
+
         private void Start()
         {
             m_RigidBody = GetComponent<Rigidbody>();
+            m_Collider = GetComponent<CapsuleCollider>();
             m_AnimatorController = transform.GetChild(0).GetComponent<AnimatorController>();
             m_AnimatorController.Initialize(OnAnimatorMovement);
             m_InputManager = GameManager.PlayerInputManager;
+            m_FallingTimer = 0f;
             m_Camera = Camera.main.transform;
+            m_IgnoreLayerMask = ~(1 << 9 | 1 << 10);
 
             m_InputManager.OnBPressed += HandleRollingAndSprinting;
             m_InputManager.OnBHold += HandleSprint;
@@ -49,6 +61,7 @@ namespace Code
         private void Update()
         {
             HandleMovement(Time.deltaTime);
+            HandleFalling(Time.deltaTime);
             m_AnimatorController.SetCanRotate(!m_AnimatorController.IsInteractingFlag);
         }
 
@@ -118,6 +131,54 @@ namespace Code
             }
         }
 
+        private void HandleFalling(float delta)
+        {
+            var groundCheckPoint = transform.position + Vector3.up * GroundDetectPointOffset;
+            Debug.DrawLine(groundCheckPoint, groundCheckPoint + Vector3.down * GroundDetectMinimumDistance, Color.red,
+                0.2f, false);
+            if (Physics.Raycast(groundCheckPoint, Vector3.down, out var hit,
+                    GroundDetectMinimumDistance, m_IgnoreLayerMask)) //如果在地面上
+            {
+                transform.position = hit.point;
+                if (m_IsGround)
+                    return;
+                
+                //先检查一下是不是落地
+                if (m_FallingTimer <= 0.5f) //0.5秒内的落地不需要播放任何动画
+                {
+                    m_AnimatorController.PlayTargetAnimation("Locomotion", false);
+                }
+                else if (m_FallingTimer <=1f) //1.5秒内的落地播放小硬直动画
+                {
+                    m_AnimatorController.PlayTargetAnimation("Land_Easy", true);
+                }
+                else
+                {
+                    m_AnimatorController.PlayTargetAnimation("Land_Hard", true);
+                }
+                
+                Debug.LogWarning("Land ground on: " + hit.point);
+                m_Collider.enabled = true;
+                m_FallingTimer = 0f;
+                m_IsGround = true;
+            }
+            else
+            {
+                if (m_IsGround)
+                    m_IsGround = false;
+                
+                if (!m_AnimatorController.IsInteractingFlag)
+                {
+                    m_AnimatorController.PlayTargetAnimation("Falling", true);
+                }
+
+                m_Collider.enabled = false;
+                m_RigidBody.AddForce(Vector3.down * MovementUtility.GetFallingVelocity(m_FallingTimer),
+                    ForceMode.VelocityChange);
+                m_FallingTimer += delta;
+            }
+        }
+        
         private void OnDestroy()
         {
             m_InputManager.OnBPressed -= HandleRollingAndSprinting;
