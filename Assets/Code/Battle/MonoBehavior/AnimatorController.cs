@@ -2,7 +2,7 @@
 using Code.Utility;
 using UnityEngine;
 
-namespace Code
+namespace Code.Battle.MonoBehavior
 {
     public class AnimatorController : MonoBehaviour
     {

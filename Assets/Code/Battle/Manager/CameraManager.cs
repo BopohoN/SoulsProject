@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using Code.Battle.MonoBehavior;
+using Code.GameBase;
+using UnityEngine;
 
-namespace Code.GameBase
+namespace Code.Battle.Manager
 {
-    public class CameraManager : BaseManager
+    public class CameraManager : BaseBattleManager
     {
         private Transform m_FocusTransform;
         private Transform m_CameraHolderTransform;
@@ -29,21 +31,21 @@ namespace Code.GameBase
         private const float CameraSphereRadius = 0.2f;
         private const float CameraCollisionOffset = 0.2f;
         private const float CameraMinimumCollisionOffset = 0.2f;
-        public override void OnStart()
+        public override void Init()
         {
             m_CameraHolderTransform = GameManager.AssetManager.InitializeObject("CameraHolder").transform;
-            m_FocusTransform = GameManager.PlayerManager.Player.transform;
+            m_FocusTransform = Core.GetMgr<PlayerManager>().Player.transform;
             m_CameraPivotTransform = m_CameraHolderTransform.GetChild(0);
             m_CameraTransform = m_CameraPivotTransform.GetChild(0);
             m_DefaultCameraZoom = m_CameraTransform.localPosition.z;
             m_IgnoreLayers = ~(1 << 8 | 1 << 9 | 1 << 10);
         }
-        
+
         public override void FixedUpdate()
         {
-            var playerInputMgr = GameManager.PlayerInputManager;
+            var playerInputMgr = Core.GetMgr<PlayerManager>().Player.GetComponent<PlayerInput>();
             FollowTarget(Time.deltaTime);
-            HandleCameraRotation(Time.deltaTime, playerInputMgr.MouseX, playerInputMgr.MouseY);
+            HandleCameraRotation(Time.deltaTime, playerInputMgr.mouseX, playerInputMgr.mouseY);
         }
 
         private void FollowTarget(float deltaTime)
@@ -90,7 +92,7 @@ namespace Code.GameBase
             m_CameraTransform.localPosition = m_CameraTransformPosition;
         }
 
-        public override void OnDispose()
+        public override void Dispose()
         {
             
         }

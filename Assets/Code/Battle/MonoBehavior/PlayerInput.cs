@@ -4,15 +4,15 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 
-namespace Code.GameBase
+namespace Code.Battle.MonoBehavior
 {
-    public class PlayerInputManager: BaseManager
+    public class PlayerInput: MonoBehaviour
     {
-        public float Horizontal;
-        public float Vertical;
-        public float MoveAmount;
-        public float MouseX;
-        public float MouseY;
+        public float horizontal;
+        public float vertical;
+        public float moveAmount;
+        public float mouseX;
+        public float mouseY;
 
         public event Action<InputAction.CallbackContext> OnBPressed;
         public event Action<InputAction.CallbackContext> OnBHold;
@@ -22,7 +22,7 @@ namespace Code.GameBase
         private Vector2 m_MovementInput;
         private Vector2 m_CameraInput;
 
-        public override void OnStart()
+        public void Start()
         {
             if (m_InputActions == null)
             {
@@ -45,30 +45,35 @@ namespace Code.GameBase
                 {
                     OnBRelease?.Invoke(ctx);
                 };
-
+                
+                m_InputActions.PlayerMovement.Enable();
+                m_InputActions.PlayerActions.Enable();
             }
-
-            m_InputActions.PlayerMovement.Enable();
-            m_InputActions.PlayerActions.Enable();
         }
 
-        public override void LogicUpdate()
+        private void OnEnable()
+        {
+            m_InputActions?.PlayerMovement.Enable();
+            m_InputActions?.PlayerActions.Enable();
+        }
+
+        public void Update()
         {
             MoveInput(Time.deltaTime);
         }
 
-        public override void OnDispose()
+        public void OnDisable()
         {
             m_InputActions.PlayerMovement.Disable();
         }
 
         private void MoveInput(float delta)
         {
-            Horizontal = m_MovementInput.x;
-            Vertical = m_MovementInput.y;
-            MoveAmount = Mathf.Clamp01(Mathf.Abs(Horizontal) + Mathf.Abs(Vertical));
-            MouseX = m_CameraInput.x;
-            MouseY = m_CameraInput.y;
+            horizontal = m_MovementInput.x;
+            vertical = m_MovementInput.y;
+            moveAmount = Mathf.Clamp01(Mathf.Abs(horizontal) + Mathf.Abs(vertical));
+            mouseX = m_CameraInput.x;
+            mouseY = m_CameraInput.y;
         }
     }
 }

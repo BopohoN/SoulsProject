@@ -1,11 +1,8 @@
-﻿using System;
-using Code.GameBase;
-using Code.Utility;
+﻿using Code.Utility;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using PlayerInputManager = Code.GameBase.PlayerInputManager;
 
-namespace Code
+namespace Code.Battle.MonoBehavior
 {
     public class PlayerController : MonoBehaviour
     {
@@ -25,7 +22,7 @@ namespace Code
         [SerializeField] private float rotationSpeed = 10f;
         private Rigidbody m_RigidBody;
         private AnimatorController m_AnimatorController;
-        private PlayerInputManager m_InputManager;
+        private PlayerInput m_PlayerInput;
 
         private bool m_IsSprinting;
 
@@ -38,14 +35,14 @@ namespace Code
             m_Collider = GetComponent<CapsuleCollider>();
             m_AnimatorController = transform.GetChild(0).GetComponent<AnimatorController>();
             m_AnimatorController.Initialize(OnAnimatorMovement);
-            m_InputManager = GameManager.PlayerInputManager;
+            m_PlayerInput = GetComponent<PlayerInput>();
             m_FallingTimer = 0f;
             m_Camera = Camera.main.transform;
             m_IgnoreLayerMask = ~(1 << 9 | 1 << 10);
 
-            m_InputManager.OnBPressed += HandleRollingAndSprinting;
-            m_InputManager.OnBHold += HandleSprint;
-            m_InputManager.OnBRelease += ResetRollAndSprint;
+            m_PlayerInput.OnBPressed += HandleRollingAndSprinting;
+            m_PlayerInput.OnBHold += HandleSprint;
+            m_PlayerInput.OnBRelease += ResetRollAndSprint;
         }
 
         private void OnAnimatorMovement(Animator animator)
@@ -67,10 +64,10 @@ namespace Code
 
         private void HandlerRotation(float delta)
         {
-            var moveOverride = m_InputManager.Vertical;
+            var moveOverride = m_PlayerInput.vertical;
 
-            var targetDir = m_Camera.forward * m_InputManager.Vertical;
-            targetDir += m_Camera.right * m_InputManager.Horizontal;
+            var targetDir = m_Camera.forward * m_PlayerInput.vertical;
+            targetDir += m_Camera.right * m_PlayerInput.horizontal;
             
             targetDir.Normalize();
             targetDir.y = 0;
@@ -87,18 +84,18 @@ namespace Code
 
         private void HandleMovement(float delta)
         {
-            m_MoveDir = m_Camera.forward * m_InputManager.Vertical;
-            m_MoveDir += m_Camera.right * m_InputManager.Horizontal;
+            m_MoveDir = m_Camera.forward * m_PlayerInput.vertical;
+            m_MoveDir += m_Camera.right * m_PlayerInput.horizontal;
             m_MoveDir.Normalize();
 
-            var moveAmount = MovementUtility.ClampMovement(m_InputManager.MoveAmount);
+            var moveAmount = MovementUtility.ClampMovement(m_PlayerInput.moveAmount);
             var speed = moveAmount >= 0.8f ? fullMoveSpeed : walkSpeed;
             m_MoveDir *= m_IsSprinting ? sprintingSpeed : speed;
 
             var projectedVelocity = Vector3.ProjectOnPlane(new Vector3(m_MoveDir.x, 0, m_MoveDir.z), m_NormalVector);
             m_RigidBody.velocity = projectedVelocity;
 
-            m_AnimatorController.UpdateAnimatorValue(m_InputManager.MoveAmount, 0, m_IsSprinting);
+            m_AnimatorController.UpdateAnimatorValue(m_PlayerInput.moveAmount, 0, m_IsSprinting);
             if (m_AnimatorController.CanRotate)
                 HandlerRotation(delta);
         }
@@ -110,17 +107,18 @@ namespace Code
 
         private void HandleSprint(InputAction.CallbackContext ctx)
         {
-            m_IsSprinting = true;
+            if (m_PlayerInput.moveAmount > 0.55f)
+                m_IsSprinting = true;
         }
-        
+
         private void HandleRollingAndSprinting(InputAction.CallbackContext ctx)
         {
             if (m_AnimatorController.IsInteractingFlag) return;
 
-            m_MoveDir = m_Camera.forward * m_InputManager.Vertical;
-            m_MoveDir += m_Camera.right * m_InputManager.Horizontal;
+            m_MoveDir = m_Camera.forward * m_PlayerInput.vertical;
+            m_MoveDir += m_Camera.right * m_PlayerInput.horizontal;
 
-            if (m_InputManager.MoveAmount > 0)
+            if (m_PlayerInput.moveAmount > 0)
             {
                 m_AnimatorController.PlayTargetAnimation("Rolling", true);
                 transform.rotation = Quaternion.LookRotation(new Vector3(m_MoveDir.x, 0f, m_MoveDir.z));
@@ -181,7 +179,7 @@ namespace Code
         
         private void OnDestroy()
         {
-            m_InputManager.OnBPressed -= HandleRollingAndSprinting;
+            m_PlayerInput.OnBPressed -= HandleRollingAndSprinting;
         }
     }
 }

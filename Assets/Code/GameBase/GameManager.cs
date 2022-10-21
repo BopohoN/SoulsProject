@@ -6,9 +6,7 @@ namespace Code.GameBase
     public interface IBaseManager
     {
         void OnStart();
-        void LogicUpdate();
-        void PresentationUpdate();
-        void FixedUpdate();
+        void Update();
         void OnDispose();
     }
 
@@ -17,17 +15,7 @@ namespace Code.GameBase
         public abstract void OnStart();
         protected bool IsComplete { get; set; }
 
-        public virtual void LogicUpdate()
-        {
-            
-        }
-
-        public virtual void PresentationUpdate()
-        {
-            
-        }
-
-        public virtual void FixedUpdate()
+        public virtual void Update()
         {
             
         }
@@ -45,9 +33,6 @@ namespace Code.GameBase
             m_BaseManagers = new List<IBaseManager>
             {
                 new AssetManager(),
-                new PlayerInputManager(),
-                new PlayerManager(),
-                new CameraManager(),
             };
             _instance = this;
         }
@@ -73,15 +58,7 @@ namespace Code.GameBase
         private void Update()
         {
             foreach (var baseManager in m_BaseManagers)
-                baseManager.LogicUpdate();
-            foreach (var baseManager in m_BaseManagers)
-                baseManager.PresentationUpdate();
-        }
-
-        private void FixedUpdate()
-        {
-            foreach (var baseManager in m_BaseManagers)
-                baseManager.FixedUpdate();
+                baseManager.Update();
         }
 
         private void OnDestroy()
@@ -90,8 +67,6 @@ namespace Code.GameBase
                 baseManager.OnDispose();
         }
 
-        public static PlayerInputManager PlayerInputManager => _instance.GetMgr<PlayerInputManager>();
         public static AssetManager AssetManager => _instance.GetMgr<AssetManager>();
-        public static PlayerManager PlayerManager => _instance.GetMgr<PlayerManager>();
     }
 }

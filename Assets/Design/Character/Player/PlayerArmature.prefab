@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 167964790357750298}
   - component: {fileID: 195060136684899957}
   - component: {fileID: 2227921843769266122}
+  - component: {fileID: 1314061503063423978}
+  - component: {fileID: 4975276008085947983}
   m_Layer: 10
   m_Name: PlayerArmature
   m_TagString: Untagged
@@ -65,6 +67,40 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
+--- !u!114 &1314061503063423978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1880649293395948486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9e5cd553bb94f3ca037fd8666a52548, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 9.8
+  walkSpeed: 1.5
+  fullMoveSpeed: 4.5
+  sprintingSpeed: 6
+  rotationSpeed: 10
+--- !u!114 &4975276008085947983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1880649293395948486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebff23df976c4152907434735196eeae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Horizontal: 0
+  Vertical: 0
+  MoveAmount: 0
+  MouseX: 0
+  MouseY: 0
 --- !u!1 &8838000516889404355
 GameObject:
   m_ObjectHideFlags: 0
