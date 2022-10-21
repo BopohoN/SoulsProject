@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1314061503063423978}
   - component: {fileID: 4975276008085947983}
   - component: {fileID: 6336172752059486059}
+  - component: {fileID: 6238655142861452529}
   m_Layer: 10
   m_Name: PlayerArmature
   m_TagString: Untagged
@@ -81,6 +82,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3974ec17a381585438be9d3730972511, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isInteracting: 0
+  isSprinting: 0
+  isGrounded: 0
 --- !u!114 &1314061503063423978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,6 +119,8 @@ MonoBehaviour:
   moveAmount: 0
   mouseX: 0
   mouseY: 0
+  rbInput: 0
+  rtInput: 0
 --- !u!114 &6336172752059486059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,6 +135,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rightWeapon: {fileID: 11400000, guid: 9c543f2bb6492ce47820c34ab23fa0cb, type: 2}
   leftWeapon: {fileID: 11400000, guid: 9c543f2bb6492ce47820c34ab23fa0cb, type: 2}
+--- !u!114 &6238655142861452529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1880649293395948486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8eca74b3cf6649648e45c86d1dde60da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6634245821807545404
 GameObject:
   m_ObjectHideFlags: 0

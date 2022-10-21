@@ -3,6 +3,7 @@ using Code.InputSystemActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
+using UnityEngine.Serialization;
 
 namespace Code.Battle.MonoBehavior
 {
@@ -13,6 +14,9 @@ namespace Code.Battle.MonoBehavior
         public float moveAmount;
         public float mouseX;
         public float mouseY;
+        
+        public bool rbInput;
+        public bool rtInput;
 
         public event Action<InputAction.CallbackContext> OnBPressed;
         public event Action<InputAction.CallbackContext> OnBHold;
@@ -21,6 +25,12 @@ namespace Code.Battle.MonoBehavior
         private PlayerInputActions m_InputActions;
         private Vector2 m_MovementInput;
         private Vector2 m_CameraInput;
+        private PlayerCore m_PlayerCore;
+
+        private void Awake()
+        {
+            m_PlayerCore = GetComponent<PlayerCore>();
+        }
 
         public void Start()
         {
@@ -32,6 +42,11 @@ namespace Code.Battle.MonoBehavior
 
                 m_InputActions.PlayerMovement.Camera.performed += ctx => m_CameraInput = ctx.ReadValue<Vector2>();
                 m_InputActions.PlayerMovement.Camera.canceled += _ => m_CameraInput = Vector2.zero;
+
+                m_InputActions.PlayerActions.RB.performed += i => rbInput = true;
+                m_InputActions.PlayerActions.RB.canceled += i => rbInput = false;
+                m_InputActions.PlayerActions.RT.performed += i => rtInput = true;
+                m_InputActions.PlayerActions.RT.canceled += i => rtInput = false;
 
                 m_InputActions.PlayerActions.RollAndSprint.performed += ctx =>
                 {
@@ -62,13 +77,27 @@ namespace Code.Battle.MonoBehavior
             m_InputActions.PlayerMovement.Disable();
         }
 
-        public void MoveInput(float delta)
+        public void TickInput(float delta)
+        {
+            MoveInput(delta);
+            HandleAttackInput(delta);
+        }
+
+        private void MoveInput(float delta)
         {
             horizontal = m_MovementInput.x;
             vertical = m_MovementInput.y;
             moveAmount = Mathf.Clamp01(Mathf.Abs(horizontal) + Mathf.Abs(vertical));
             mouseX = m_CameraInput.x;
             mouseY = m_CameraInput.y;
+        }
+
+        private void HandleAttackInput(float delta)
+        {
+            if (rbInput)
+                m_PlayerCore.PlayerAttacker.HandleLightAttack();
+            if (rtInput)
+                m_PlayerCore.PlayerAttacker.HandleHeavyAttack();
         }
     }
 }

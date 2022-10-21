@@ -12,12 +12,16 @@ namespace Code.Battle.MonoBehavior
         public AnimatorController AnimatorController { get; private set; }
         public PlayerController PlayerController { get; private set; }
         public PlayerInput PlayerInput { get; private set; }
+        public PlayerAttacker PlayerAttacker { get; private set; }
+        public PlayerInventory PlayerInventory { get; private set; }
 
         private void Awake()
         {
             AnimatorController = GetComponentInChildren<AnimatorController>();
             PlayerController = GetComponentInChildren<PlayerController>();
             PlayerInput = GetComponentInChildren<PlayerInput>();
+            PlayerAttacker = GetComponentInChildren<PlayerAttacker>();
+            PlayerInventory = GetComponentInChildren<PlayerInventory>();
         }
 
         void Start()
@@ -33,7 +37,7 @@ namespace Code.Battle.MonoBehavior
             PlayerController.HandleMovement(Time.deltaTime);
             PlayerController.HandleFalling(Time.deltaTime);
             AnimatorController.SetCanRotate(!isInteracting);
-            PlayerInput.MoveInput(Time.deltaTime);
+            PlayerInput.TickInput(Time.deltaTime);
         }
     }
 }
