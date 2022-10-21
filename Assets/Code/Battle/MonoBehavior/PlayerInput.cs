@@ -57,17 +57,12 @@ namespace Code.Battle.MonoBehavior
             m_InputActions?.PlayerActions.Enable();
         }
 
-        public void Update()
-        {
-            MoveInput(Time.deltaTime);
-        }
-
         public void OnDisable()
         {
             m_InputActions.PlayerMovement.Disable();
         }
 
-        private void MoveInput(float delta)
+        public void MoveInput(float delta)
         {
             horizontal = m_MovementInput.x;
             vertical = m_MovementInput.y;
