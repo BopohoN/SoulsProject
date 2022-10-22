@@ -1,6 +1,7 @@
 ﻿using System;
 using Code.Battle.Manager;
 using Code.Battle.Ui;
+using Code.Utility;
 using UnityEngine;
 
 namespace Code.Battle.MonoBehavior
@@ -30,7 +31,7 @@ namespace Code.Battle.MonoBehavior
             return maxHealth;
         }
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(int damage, Vector2 damageVec)
         {
             Debug.Log("Player take damage: " + damage);
             currentHealth -= damage;
@@ -45,10 +46,11 @@ namespace Code.Battle.MonoBehavior
                 m_PlayerCore.AnimatorController.PlayTargetAnimation("Death", true);
                 return;
             }
-
             battleMainUi.SetHealthBar(currentHealth / (float) maxHealth);
 
-            m_PlayerCore.AnimatorController.PlayTargetAnimation("core_oh_hit_reaction_medium_F_01", true);
+            var damageDir = DamageUtility.CalculateDamageDirection(damageVec);
+            m_PlayerCore.AnimatorController.SetDamageDir(damageDir);
+            m_PlayerCore.AnimatorController.PlayTargetAnimation("Hit", true);
         }
     }
 }

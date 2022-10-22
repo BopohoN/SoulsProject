@@ -7,6 +7,7 @@ namespace Code.Battle.MonoBehavior
     {
         private Collider m_DamageCollider;
         public int currentWeaponDamage;
+        private Vector3 m_LastFramePos;
 
         private void Awake()
         {
@@ -26,25 +27,34 @@ namespace Code.Battle.MonoBehavior
             m_DamageCollider.enabled = false;
         }
 
+        public void FixedUpdate()
+        {
+            m_LastFramePos = transform.position;
+        }
+
         public void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag($"Hittable"))
             {
+                var lastDamagePos = other.transform.InverseTransformPoint(m_LastFramePos);
+                var currentDamagePos = other.transform.InverseTransformPoint(transform.position);
+                var damageVec = new Vector2(currentDamagePos.x - lastDamagePos.x, currentDamagePos.z - lastDamagePos.z);
+                
                 if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
                 {
                     var playerStats = other.GetComponent<PlayerStats>();
 
                     if (playerStats != null)
-                        playerStats.TakeDamage(currentWeaponDamage);
+                        playerStats.TakeDamage(currentWeaponDamage, damageVec);
                     return;
                 }
 
                 if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
-                    var playerStats = other.GetComponent<EnemyStats>();
+                    var enemyStats = other.GetComponent<EnemyStats>();
 
-                    if (playerStats != null)
-                        playerStats.TakeDamage(currentWeaponDamage);
+                    if (enemyStats != null)
+                        enemyStats.TakeDamage(currentWeaponDamage, damageVec);
                     return;
                 }
             }

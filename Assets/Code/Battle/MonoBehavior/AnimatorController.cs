@@ -13,6 +13,8 @@ namespace Code.Battle.MonoBehavior
 
         private static readonly int Horizontal = Animator.StringToHash("Horizontal");
         private static readonly int Vertical = Animator.StringToHash("Vertical");
+        private static readonly int DamageX = Animator.StringToHash("DamageX");
+        private static readonly int DamageY = Animator.StringToHash("DamageY");
         private static readonly int IsInteracting = Animator.StringToHash("IsInteracting");
         private static readonly int CanDoCombo = Animator.StringToHash("CanDoCombo");
 
@@ -36,6 +38,12 @@ namespace Code.Battle.MonoBehavior
             
             m_Anim.SetFloat(Vertical, v, 0.1f, Time.deltaTime);
             m_Anim.SetFloat(Horizontal, h, 0.1f, Time.deltaTime);
+        }
+
+        public void SetDamageDir(Vector2 dir)
+        {
+            m_Anim.SetFloat(DamageX, dir.x);
+            m_Anim.SetFloat(DamageY, dir.y);
         }
 
         public void PlayTargetAnimation(string targetAnim, bool isInteracting)

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Code.Utility;
+using UnityEngine;
 
 namespace Code.Battle.MonoBehavior
 {
@@ -9,7 +10,11 @@ namespace Code.Battle.MonoBehavior
         public int currentHealth;
 
         private Animator m_Animator;
+        private static readonly int DamageX = Animator.StringToHash("DamageX");
+        private static readonly int DamageY = Animator.StringToHash("DamageY");
 
+        private static readonly int Hit = Animator.StringToHash("Hit");
+        private static readonly int Death = Animator.StringToHash("Death");
         private void Awake()
         {
             m_Animator = GetComponentInChildren<Animator>();
@@ -27,7 +32,7 @@ namespace Code.Battle.MonoBehavior
             return maxHealth;
         }
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(int damage, Vector2 damageVec)
         {
             Debug.Log("Player take damage: " + damage);
             currentHealth -= damage;
@@ -35,10 +40,15 @@ namespace Code.Battle.MonoBehavior
             if (currentHealth <= 0)
             {
                 currentHealth = 0;
-                m_Animator.Play("Death");
+                m_Animator.Play(Death);
                 return;
             }
-            m_Animator.Play("core_oh_hit_reaction_medium_F_01");
+
+            var damageDir = DamageUtility.CalculateDamageDirection(damageVec);
+            
+            m_Animator.SetFloat(DamageX, damageDir.x);
+            m_Animator.SetFloat(DamageY, damageDir.y);
+            m_Animator.Play(Hit);
         }
     }
 }

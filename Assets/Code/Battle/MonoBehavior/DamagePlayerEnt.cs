@@ -11,7 +11,7 @@ namespace Code.Battle.MonoBehavior
             if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
                 var playerStats = other.GetComponent<PlayerStats>();
-                playerStats.TakeDamage(damage);
+                playerStats.TakeDamage(damage, Vector2.down);
             }
         }
     }
