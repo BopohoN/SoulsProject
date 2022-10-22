@@ -43,7 +43,7 @@ namespace Code.Battle.MonoBehavior
             PlayerController.HandleFalling(Time.deltaTime);
             AnimatorController.SetCanRotate(!isInteracting);
             PlayerInput.TickInput(Time.deltaTime);
-            PlayerCollider.enabled = !isDead;
+            PlayerCollider.enabled = !isDead && isGrounded;
         }
     }
 }

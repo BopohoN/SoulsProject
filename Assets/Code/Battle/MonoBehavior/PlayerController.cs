@@ -1,4 +1,5 @@
-﻿using Code.Utility;
+﻿using System;
+using Code.Utility;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,7 +8,6 @@ namespace Code.Battle.MonoBehavior
     public class PlayerController : MonoBehaviour
     {
         private float m_FallingTimer;
-        private CapsuleCollider m_Collider;
         private Transform m_Camera;
         private Vector3 m_MoveDir;
         private LayerMask m_IgnoreLayerMask;
@@ -27,7 +27,6 @@ namespace Code.Battle.MonoBehavior
         private void Start()
         {
             m_RigidBody = GetComponent<Rigidbody>();
-            m_Collider = GetComponent<CapsuleCollider>();
             m_PlayerCore = GetComponent<PlayerCore>();
             m_PlayerCore.AnimatorController.Initialize(OnAnimatorMovement);
             m_FallingTimer = 0f;
@@ -143,7 +142,6 @@ namespace Code.Battle.MonoBehavior
                 }
                 
                 Debug.LogWarning("Land ground on: " + hit.point);
-                m_Collider.enabled = true;
                 m_FallingTimer = 0f;
                 m_PlayerCore.isGrounded = true;
             }
@@ -153,11 +151,8 @@ namespace Code.Battle.MonoBehavior
                     m_PlayerCore.isGrounded = false;
                 
                 if (!m_PlayerCore.isInteracting)
-                {
                     m_PlayerCore.AnimatorController.PlayTargetAnimation("Falling", true);
-                }
 
-                m_Collider.enabled = false;
                 m_RigidBody.AddForce(Vector3.down * MovementUtility.GetFallingVelocity(m_FallingTimer),
                     ForceMode.VelocityChange);
                 m_FallingTimer += delta;
