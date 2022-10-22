@@ -7,16 +7,19 @@ namespace Code.Battle.MonoBehavior
         public bool isInteracting;
         public bool isSprinting;
         public bool isGrounded;
-        
-        
+        public bool isDead;
+
+        public BattleCore Core { get; private set; }
         public AnimatorController AnimatorController { get; private set; }
         public PlayerController PlayerController { get; private set; }
         public PlayerInput PlayerInput { get; private set; }
         public PlayerAttacker PlayerAttacker { get; private set; }
         public PlayerInventory PlayerInventory { get; private set; }
+        public Collider PlayerCollider { get; private set; }
 
         private void Awake()
         {
+            PlayerCollider = GetComponent<Collider>();
             AnimatorController = GetComponentInChildren<AnimatorController>();
             PlayerController = GetComponentInChildren<PlayerController>();
             PlayerInput = GetComponentInChildren<PlayerInput>();
@@ -24,11 +27,11 @@ namespace Code.Battle.MonoBehavior
             PlayerInventory = GetComponentInChildren<PlayerInventory>();
         }
 
-        void Start()
-        {
-        
-        }
 
+        public void SetBattleCore(BattleCore core)
+        {
+            Core = core;
+        }
         
         void Update()
         {
@@ -38,6 +41,7 @@ namespace Code.Battle.MonoBehavior
             PlayerController.HandleFalling(Time.deltaTime);
             AnimatorController.SetCanRotate(!isInteracting);
             PlayerInput.TickInput(Time.deltaTime);
+            PlayerCollider.enabled = !isDead;
         }
     }
 }

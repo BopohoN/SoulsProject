@@ -50,6 +50,7 @@ namespace Code.Battle
         private readonly List<IBattleManager> m_BaseManagers = new();
         public void InitCore()
         {
+            InitManager(new UiManager());
             InitManager(new PlayerManager());
             InitManager(new CameraManager());
         }
