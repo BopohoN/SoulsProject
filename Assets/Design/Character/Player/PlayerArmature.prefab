@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 7966664042552903543}
   m_Layer: 10
   m_Name: PlayerArmature
-  m_TagString: Untagged
+  m_TagString: Hittable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -85,6 +85,7 @@ MonoBehaviour:
   isInteracting: 0
   isSprinting: 0
   isGrounded: 0
+  isDead: 0
 --- !u!114 &1314061503063423978
 MonoBehaviour:
   m_ObjectHideFlags: 0

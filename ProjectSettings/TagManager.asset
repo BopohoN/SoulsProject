@@ -11,6 +11,7 @@ TagManager:
   - CinemachineTarget
   - Animal
   - Water
+  - Hittable
   layers:
   - Default
   - TransparentFX
