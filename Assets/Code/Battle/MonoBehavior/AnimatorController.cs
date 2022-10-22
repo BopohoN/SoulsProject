@@ -14,6 +14,7 @@ namespace Code.Battle.MonoBehavior
         private static readonly int Horizontal = Animator.StringToHash("Horizontal");
         private static readonly int Vertical = Animator.StringToHash("Vertical");
         private static readonly int IsInteracting = Animator.StringToHash("IsInteracting");
+        private static readonly int CanDoCombo = Animator.StringToHash("CanDoCombo");
 
         public void Initialize(Action<Animator> onAnimatorMove)
         {
@@ -45,11 +46,29 @@ namespace Code.Battle.MonoBehavior
             m_Anim.CrossFade(targetAnim, 0.2f);
         }
 
+        public void SetCanDoCombo(bool value)
+        {
+            m_Anim.SetBool(CanDoCombo, value);
+        }
+        public bool GetCanDoCombo()
+        {
+            return m_Anim.GetBool(CanDoCombo);
+        }
+
         public void SetCanRotate(bool value)
         {
             CanRotate = value;
         }
 
+        public void EnableCombo()
+        {
+            m_Anim.SetBool(CanDoCombo, true);
+        }
+        public void DisableCombo()
+        {
+            m_Anim.SetBool(CanDoCombo, false);
+        }
+        
         private void OnAnimatorMove()
         {
             if (!IsInteractingFlag) return;

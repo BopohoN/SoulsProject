@@ -1,4 +1,5 @@
 ﻿using System;
+using Code.Battle.Manager;
 using Code.InputSystemActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,6 +18,8 @@ namespace Code.Battle.MonoBehavior
         
         public bool rbInput;
         public bool rtInput;
+
+        public bool comboFlag;
 
         public event Action<InputAction.CallbackContext> OnBPressed;
         public event Action<InputAction.CallbackContext> OnBHold;
@@ -95,9 +98,40 @@ namespace Code.Battle.MonoBehavior
         private void HandleAttackInput(float delta)
         {
             if (rbInput)
-                m_PlayerCore.PlayerAttacker.HandleLightAttack();
+            {
+                if (m_PlayerCore.canDoCombo)
+                {
+                    comboFlag = true;
+                    m_PlayerCore.PlayerAttacker.HandleWeaponCombo(m_PlayerCore.PlayerInventory.rightWeapon);
+                    comboFlag = false;
+                }
+                else
+                {
+                    if (m_PlayerCore.isInteracting)
+                        return;
+                    if (m_PlayerCore.canDoCombo)
+                        return;
+                    m_PlayerCore.PlayerAttacker.HandleLightAttack();
+                }
+            }
+
             if (rtInput)
-                m_PlayerCore.PlayerAttacker.HandleHeavyAttack();
+            {
+                if (m_PlayerCore.canDoCombo)
+                {
+                    comboFlag = true;
+                    m_PlayerCore.PlayerAttacker.HandleWeaponCombo(m_PlayerCore.PlayerInventory.rightWeapon);
+                    comboFlag = false;
+                }
+                else
+                {
+                    if (m_PlayerCore.isInteracting)
+                        return;
+                    if (m_PlayerCore.canDoCombo)
+                        return;
+                    m_PlayerCore.PlayerAttacker.HandleHeavyAttack();
+                }
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ namespace Code.Battle.MonoBehavior
         public bool isInteracting;
         public bool isSprinting;
         public bool isGrounded;
+        public bool canDoCombo;
         public bool isDead;
 
         public BattleCore Core { get; private set; }
@@ -36,6 +37,7 @@ namespace Code.Battle.MonoBehavior
         void Update()
         {
             isInteracting = AnimatorController.IsInteractingFlag;
+            canDoCombo = AnimatorController.GetCanDoCombo();
             
             PlayerController.HandleMovement(Time.deltaTime);
             PlayerController.HandleFalling(Time.deltaTime);
