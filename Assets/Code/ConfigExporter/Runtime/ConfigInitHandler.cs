@@ -28,7 +28,7 @@ namespace Code.ConfigExporter.Runtime
 
         public static void LoadAllConfig(Action onDone)
         {
-            var path = Application.streamingAssetsPath + "/Config/";
+            var path = Application.dataPath + "/Config/";
             var cd = new ConfigDeserializer();
             var index = -1;
 

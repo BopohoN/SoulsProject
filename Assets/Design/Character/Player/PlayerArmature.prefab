@@ -48,8 +48,17 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1880649293395948486}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 2
   m_Radius: 0.5
   m_Height: 1.5500717
   m_Direction: 1
@@ -61,10 +70,21 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1880649293395948486}
-  serializedVersion: 2
+  serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -85,7 +105,9 @@ MonoBehaviour:
   isInteracting: 0
   isSprinting: 0
   isGrounded: 0
+  canDoCombo: 0
   isDead: 0
+  isOH: 1
 --- !u!114 &1314061503063423978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,6 +144,7 @@ MonoBehaviour:
   mouseY: 0
   rbInput: 0
   rtInput: 0
+  comboFlag: 0
 --- !u!114 &6336172752059486059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,8 +157,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42299205e14413a4c8ce933e5f88c1e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightWeapon: {fileID: 11400000, guid: 9c543f2bb6492ce47820c34ab23fa0cb, type: 2}
-  leftWeapon: {fileID: 11400000, guid: 9c543f2bb6492ce47820c34ab23fa0cb, type: 2}
+  rightWeapon: 30001
+  leftWeapon: -1
 --- !u!114 &6238655142861452529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,6 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eca74b3cf6649648e45c86d1dde60da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lastAttack: 0
 --- !u!114 &7966664042552903543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,7 +223,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 2
+    serializedVersion: 3
     m_TransformParent: {fileID: 167964790357750298}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 0ad932253e8dc8841948afa5d1a0d051, type: 3}
@@ -251,10 +275,27 @@ PrefabInstance:
       value: Md_Char_Low_Poly_Man
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 3780837713738550241, guid: 0ad932253e8dc8841948afa5d1a0d051, type: 3}
       insertIndex: -1
       addedObject: {fileID: 770810486360935487}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ad932253e8dc8841948afa5d1a0d051, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7758272816851653945}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ad932253e8dc8841948afa5d1a0d051, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5719538858635003419}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ad932253e8dc8841948afa5d1a0d051, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5763482699753959797}
+    - targetCorrespondingSourceObject: {fileID: 3668086056121675338, guid: 0ad932253e8dc8841948afa5d1a0d051, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 367792920632649518}
+    - targetCorrespondingSourceObject: {fileID: 6392886965815168175, guid: 0ad932253e8dc8841948afa5d1a0d051, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8499370518039966315}
   m_SourcePrefab: {fileID: 100100000, guid: 0ad932253e8dc8841948afa5d1a0d051, type: 3}
 --- !u!4 &721202874422124339 stripped
 Transform:
@@ -273,7 +314,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
 --- !u!95 &7758272816851653945
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -290,7 +331,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &5719538858635003419
 MonoBehaviour:
   m_ObjectHideFlags: 0
