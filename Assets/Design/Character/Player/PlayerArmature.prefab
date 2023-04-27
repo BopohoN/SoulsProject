@@ -120,11 +120,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9e5cd553bb94f3ca037fd8666a52548, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravity: 9.8
-  walkSpeed: 1.5
-  fullMoveSpeed: 4.5
-  sprintingSpeed: 6
-  rotationSpeed: 10
 --- !u!114 &4975276008085947983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,7 +179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d772d009e1c427e93244b4056be8606, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthLevel: 10
+  healthLevel: 9
   maxHealth: 0
   currentHealth: 0
 --- !u!1 &6634245821807545404

@@ -11,6 +11,7 @@ namespace Code.ConfigExporter.Runtime
             new List<Action<ConfigDeserializer, string, Action>>
             {
 //INIT_CODE_GENERATE_START
+				EquationConfig.Init,
 				ConstConfig.Init,
 				WeaponActionConfig.Init,
 				WeaponConfig.Init,
@@ -21,6 +22,7 @@ namespace Code.ConfigExporter.Runtime
         private static readonly List<Action> ConfigResetHandlers = new List<Action>()
         {
 //RESET_CODE_GENERATE_START
+				EquationConfig.Reset,
 				ConstConfig.Reset,
 				WeaponActionConfig.Reset,
 				WeaponConfig.Reset,

@@ -1,6 +1,8 @@
-﻿using Code.Runtime.Battle.Manager;
+﻿using Code.Configuration;
+using Code.Runtime.Battle.Manager;
 using Code.Runtime.Battle.Ui;
 using Code.Runtime.Utility;
+using Code.Runtime.Utility.PolishExpression;
 using UnityEngine;
 
 namespace Code.Runtime.Battle.MonoBehavior
@@ -26,7 +28,8 @@ namespace Code.Runtime.Battle.MonoBehavior
 
         private int SetMaxHealthFromHealthLevel()
         {
-            maxHealth = healthLevel * 10;
+            maxHealth = Mathf.FloorToInt(CalculateUtility.CalculateValueFromFormula(CalculateUtility.FormulaId.BaseHp,
+                healthLevel.ToString(), ConstConfig.D[10101].Value.ToString(), ConstConfig.D[10102].Value.ToString()));
             return maxHealth;
         }
 
