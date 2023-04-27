@@ -1,4 +1,5 @@
-﻿using Code.Runtime.Utility;
+﻿using Code.Configuration;
+using Code.Runtime.Utility;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,11 +10,6 @@ namespace Code.Runtime.Battle.MonoBehavior
         private const float GroundDetectPointOffset = 0.3f;
         private const float GroundDetectMinimumDistance = 0.5f;
 
-        [Header("Stats")]
-        [SerializeField] private float walkSpeed = 1.5f;
-        [SerializeField] private float fullMoveSpeed = 4.5f;
-        [SerializeField] private float sprintingSpeed = 6f;
-        [SerializeField] private float rotationSpeed = 10f;
         private Transform m_Camera;
         private float m_FallingTimer;
         private LayerMask m_IgnoreLayerMask;
@@ -61,7 +57,7 @@ namespace Code.Runtime.Battle.MonoBehavior
             if (targetDir == Vector3.zero)
                 targetDir = transform.forward;
 
-            var rs = rotationSpeed;
+            var rs = ConstConfig.D[10004].Value / 100f;
             var tr = Quaternion.LookRotation(targetDir);
             var targetRotation = Quaternion.Slerp(transform.rotation, tr, rs * delta);
 
@@ -75,11 +71,13 @@ namespace Code.Runtime.Battle.MonoBehavior
             m_MoveDir.Normalize();
 
             var moveAmount = MovementUtility.ClampMovement(m_PlayerCore.PlayerInput.moveAmount);
-            if (moveAmount < 0.4f || !m_PlayerCore.isSprinting)
+            if (moveAmount < (ConstConfig.D[10005].Value / 100f) * 0.8f || !m_PlayerCore.isSprinting)
                 ResetRollAndSprint(default);
-            
-            var speed = moveAmount >= 0.8f ? fullMoveSpeed : walkSpeed;
-            m_MoveDir *= m_PlayerCore.isSprinting ? sprintingSpeed : speed;
+
+            var speed = moveAmount >= (ConstConfig.D[10006].Value / 100f) * 0.8f
+                ? ConstConfig.D[10002].Value / 100f     //跑步速度
+                : ConstConfig.D[10001].Value / 100f;    //行走速度
+            m_MoveDir *= m_PlayerCore.isSprinting ? ConstConfig.D[10003].Value / 100f : speed;  //冲刺速度
 
             var projectedVelocity = Vector3.ProjectOnPlane(new Vector3(m_MoveDir.x, 0, m_MoveDir.z), m_NormalVector);
             m_RigidBody.velocity = projectedVelocity;
@@ -97,7 +95,7 @@ namespace Code.Runtime.Battle.MonoBehavior
 
         private void HandleSprint(InputAction.CallbackContext ctx)
         {
-            if (m_PlayerCore.PlayerInput.moveAmount > 0.55f)
+            if (m_PlayerCore.PlayerInput.moveAmount > ConstConfig.D[10005].Value / 100f)
                 m_PlayerCore.isSprinting = true;
         }
 
@@ -130,9 +128,9 @@ namespace Code.Runtime.Battle.MonoBehavior
                     return;
 
                 //先检查一下是不是落地
-                if (m_FallingTimer <= 0.3f) //0.3秒内的落地不需要播放任何动画
+                if (m_FallingTimer <= ConstConfig.D[10010].Value / 1000f) //X秒内的落地不需要播放任何动画
                     m_PlayerCore.AnimatorController.PlayTargetAnimation("Empty", false);
-                else if (m_FallingTimer <= 0.7f) //0.7秒内的落地播放小硬直动画
+                else if (m_FallingTimer <= ConstConfig.D[10011].Value / 1000f) //Y秒内的落地播放小硬直动画
                     m_PlayerCore.AnimatorController.PlayTargetAnimation("Land_Easy", true);
                 else
                     m_PlayerCore.AnimatorController.PlayTargetAnimation("Land_Hard", true);
