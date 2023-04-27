@@ -24,28 +24,26 @@ namespace Code.Runtime.Battle.MonoBehavior
         {
             if (isLeft)
             {
-                Debug.Log("LoadWeaponModel m_LeftHandSlot");
                 m_LeftHandSlot.LoadWeaponModel(weaponId);
-                LoadLeftWeaponDamageCollider();
+                if (weaponId >= 0)
+                    LoadLeftWeaponDamageCollider();
             }
             else
             {
-                Debug.Log("LoadWeaponModel m_RightHandSlot");
                 m_RightHandSlot.LoadWeaponModel(weaponId);
-                LoadRightWeaponDamageCollider();
+                if (weaponId >= 0)
+                    LoadRightWeaponDamageCollider();
             }
         }
 
         private void LoadLeftWeaponDamageCollider()
         {
             m_LeftHandDamageCollider = m_LeftHandSlot.currentWeaponModel.GetComponentInChildren<DamageCollider>();
-            Debug.Log(m_LeftHandDamageCollider.name);
         }
 
         private void LoadRightWeaponDamageCollider()
         {
             m_RightHandDamageCollider = m_RightHandSlot.currentWeaponModel.GetComponentInChildren<DamageCollider>();
-            Debug.Log(m_RightHandDamageCollider.name);
         }
 
         //Animation Events

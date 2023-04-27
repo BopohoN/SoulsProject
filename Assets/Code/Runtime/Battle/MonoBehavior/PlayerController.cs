@@ -53,8 +53,6 @@ namespace Code.Runtime.Battle.MonoBehavior
 
         private void HandlerRotation(float delta)
         {
-            var moveOverride = m_PlayerCore.PlayerInput.vertical;
-
             var targetDir = m_Camera.forward * m_PlayerCore.PlayerInput.vertical;
             targetDir += m_Camera.right * m_PlayerCore.PlayerInput.horizontal;
 
@@ -78,6 +76,9 @@ namespace Code.Runtime.Battle.MonoBehavior
             m_MoveDir.Normalize();
 
             var moveAmount = MovementUtility.ClampMovement(m_PlayerCore.PlayerInput.moveAmount);
+            if (moveAmount < 0.4f)
+                ResetRollAndSprint(default);
+            
             var speed = moveAmount >= 0.8f ? fullMoveSpeed : walkSpeed;
             m_MoveDir *= m_PlayerCore.isSprinting ? sprintingSpeed : speed;
 
@@ -132,14 +133,13 @@ namespace Code.Runtime.Battle.MonoBehavior
                     return;
 
                 //先检查一下是不是落地
-                if (m_FallingTimer <= 0.5f) //0.5秒内的落地不需要播放任何动画
+                if (m_FallingTimer <= 0.3f) //0.3秒内的落地不需要播放任何动画
                     m_PlayerCore.AnimatorController.PlayTargetAnimation("Empty", false);
-                else if (m_FallingTimer <= 1f) //1.5秒内的落地播放小硬直动画
+                else if (m_FallingTimer <= 0.7f) //0.7秒内的落地播放小硬直动画
                     m_PlayerCore.AnimatorController.PlayTargetAnimation("Land_Easy", true);
                 else
                     m_PlayerCore.AnimatorController.PlayTargetAnimation("Land_Hard", true);
 
-                Debug.LogWarning("Land ground on: " + hit.point);
                 m_FallingTimer = 0f;
                 m_PlayerCore.isGrounded = true;
             }

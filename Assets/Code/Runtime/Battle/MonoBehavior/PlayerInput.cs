@@ -104,8 +104,6 @@ namespace Code.Runtime.Battle.MonoBehavior
                 {
                     if (m_PlayerCore.isInteracting)
                         return;
-                    if (m_PlayerCore.canDoCombo)
-                        return;
                     m_PlayerCore.PlayerAttacker.HandleLightAttack(m_PlayerCore.PlayerInventory.rightWeapon);
                 }
             }
@@ -121,8 +119,6 @@ namespace Code.Runtime.Battle.MonoBehavior
                 else
                 {
                     if (m_PlayerCore.isInteracting)
-                        return;
-                    if (m_PlayerCore.canDoCombo)
                         return;
                     m_PlayerCore.PlayerAttacker.HandleHeavyAttack(m_PlayerCore.PlayerInventory.rightWeapon);
                 }

@@ -53,7 +53,6 @@ namespace Code.Runtime.Battle.MonoBehavior
 
         public void PlayTargetAnimation(string targetAnim, bool isInteracting)
         {
-            Debug.Log("PlayTargetAnimation : " + targetAnim);
             m_Anim.applyRootMotion = isInteracting;
             m_Anim.SetBool(IsInteracting, isInteracting);
             m_Anim.CrossFade(targetAnim, 0.2f);
