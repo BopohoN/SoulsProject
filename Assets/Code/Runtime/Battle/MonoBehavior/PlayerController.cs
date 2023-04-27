@@ -9,8 +9,7 @@ namespace Code.Runtime.Battle.MonoBehavior
         private const float GroundDetectPointOffset = 0.3f;
         private const float GroundDetectMinimumDistance = 0.5f;
 
-        [Header("Stats")] [SerializeField] private float gravity = 9.8f;
-
+        [Header("Stats")]
         [SerializeField] private float walkSpeed = 1.5f;
         [SerializeField] private float fullMoveSpeed = 4.5f;
         [SerializeField] private float sprintingSpeed = 6f;
@@ -76,7 +75,7 @@ namespace Code.Runtime.Battle.MonoBehavior
             m_MoveDir.Normalize();
 
             var moveAmount = MovementUtility.ClampMovement(m_PlayerCore.PlayerInput.moveAmount);
-            if (moveAmount < 0.4f)
+            if (moveAmount < 0.4f || !m_PlayerCore.isSprinting)
                 ResetRollAndSprint(default);
             
             var speed = moveAmount >= 0.8f ? fullMoveSpeed : walkSpeed;
@@ -123,8 +122,6 @@ namespace Code.Runtime.Battle.MonoBehavior
         public void HandleFalling(float delta)
         {
             var groundCheckPoint = transform.position + Vector3.up * GroundDetectPointOffset;
-            Debug.DrawLine(groundCheckPoint, groundCheckPoint + Vector3.down * GroundDetectMinimumDistance, Color.red,
-                0.2f, false);
             if (Physics.Raycast(groundCheckPoint, Vector3.down, out var hit,
                     GroundDetectMinimumDistance, m_IgnoreLayerMask)) //如果在地面上
             {

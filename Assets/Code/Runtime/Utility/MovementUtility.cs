@@ -17,7 +17,7 @@
 
         public static float GetFallingVelocity(float fallingTime)
         {
-            return 4.5f * fallingTime;
+            return 3f * fallingTime;
         }
     }
 }
