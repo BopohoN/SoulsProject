@@ -1,24 +1,18 @@
 ﻿using Code.Runtime.Utility;
 using UnityEngine;
 
-namespace Code.Runtime.Battle.MonoBehavior
+namespace Code.Runtime.Battle.MonoBehavior.Enemy
 {
-    public class EnemyStats : MonoBehaviour
+    public class EnemyStates : MonoBehaviour
     {
-        private static readonly int DamageX = Animator.StringToHash("DamageX");
-        private static readonly int DamageY = Animator.StringToHash("DamageY");
-
-        private static readonly int Hit = Animator.StringToHash("Hit");
-        private static readonly int Death = Animator.StringToHash("Death");
         public int healthLevel = 10;
         public int maxHealth;
         public int currentHealth;
-
-        private Animator m_Animator;
+        private EnemyController m_EnemyController;
 
         private void Awake()
         {
-            m_Animator = GetComponentInChildren<Animator>();
+            m_EnemyController = GetComponentInChildren<EnemyController>();
         }
 
         private void Start()
@@ -41,15 +35,13 @@ namespace Code.Runtime.Battle.MonoBehavior
             if (currentHealth <= 0)
             {
                 currentHealth = 0;
-                m_Animator.Play(Death);
+                m_EnemyController.EnemyAnimController.PlayTargetAnimation("Death", true);
                 return;
             }
 
             var damageDir = DamageUtility.CalculateDamageDirection(damageVec);
-
-            m_Animator.SetFloat(DamageX, damageDir.x);
-            m_Animator.SetFloat(DamageY, damageDir.y);
-            m_Animator.Play(Hit);
+            m_EnemyController.EnemyAnimController.SetHitParam(damageDir);
+            m_EnemyController.EnemyAnimController.PlayTargetAnimation("Hit", true);
         }
     }
 }

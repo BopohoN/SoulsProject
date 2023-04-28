@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Code.Runtime.Battle.MonoBehavior.Enemy;
+using UnityEngine;
 
 namespace Code.Runtime.Battle.MonoBehavior
 {
@@ -40,7 +41,7 @@ namespace Code.Runtime.Battle.MonoBehavior
 
                 if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
-                    var enemyStats = other.GetComponent<EnemyStats>();
+                    var enemyStats = other.GetComponent<EnemyStates>();
 
                     if (enemyStats != null)
                         enemyStats.TakeDamage(currentWeaponDamage, damageVec);
