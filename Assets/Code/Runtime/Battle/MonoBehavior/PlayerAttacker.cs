@@ -16,24 +16,21 @@ namespace Code.Runtime.Battle.MonoBehavior
 
         public void HandleWeaponCombo(int weaponId,bool isLight)
         {
-            if (m_PlayerCore.PlayerInput.comboFlag)
+            m_PlayerCore.AnimatorController.SetCanDoCombo(false);
+            var isLastAttackLight = WeaponActionUtility.CheckWeaponActionIsLightAttack(lastAttack);
+            if ((isLastAttackLight && isLight) || (!isLastAttackLight && !isLight))
             {
-                m_PlayerCore.AnimatorController.SetCanDoCombo(false);
-                var isLastAttackLight = WeaponActionUtility.CheckWeaponActionIsLightAttack(lastAttack);
-                if ((isLastAttackLight && isLight) || (!isLastAttackLight && !isLight))
-                {
-                    var nextActionId = WeaponActionConfig.D[lastAttack].NextComboId;
-                    m_PlayerCore.AnimatorController.PlayTargetAnimation(
-                        (m_PlayerCore.isOH ? "oh" : "th") + WeaponActionConfig.D[nextActionId].Animation, true);
-                    lastAttack = nextActionId;
-                }
+                var nextActionId = WeaponActionConfig.D[lastAttack].NextComboId;
+                m_PlayerCore.AnimatorController.PlayTargetAnimation(
+                    (m_PlayerCore.isOH ? "oh" : "th") + WeaponActionConfig.D[nextActionId].Animation, true);
+                lastAttack = nextActionId;
+            }
+            else
+            {
+                if (isLastAttackLight)
+                    HandleLightAttack(weaponId);
                 else
-                {
-                    if (isLastAttackLight)
-                        HandleLightAttack(weaponId);
-                    else
-                        HandleHeavyAttack(weaponId);
-                }
+                    HandleHeavyAttack(weaponId);
             }
         }
 

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using Code.Configuration;
 using Code.InputSystemActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -15,9 +17,10 @@ namespace Code.Runtime.Battle.MonoBehavior
         public float mouseY;
 
         public bool rbInput;
+        public bool rbInputBuffer;
         public bool rtInput;
+        public bool rtInputBuffer;
 
-        public bool comboFlag;
         private Vector2 m_CameraInput;
 
         private PlayerInputActions m_InputActions;
@@ -27,6 +30,13 @@ namespace Code.Runtime.Battle.MonoBehavior
         private void Awake()
         {
             m_PlayerCore = GetComponent<PlayerCore>();
+        }
+        
+        private enum EButton
+        {
+            Rb,
+            Rt,
+            B
         }
 
         public void Start()
@@ -40,10 +50,24 @@ namespace Code.Runtime.Battle.MonoBehavior
                 m_InputActions.PlayerMovement.Camera.performed += ctx => m_CameraInput = ctx.ReadValue<Vector2>();
                 m_InputActions.PlayerMovement.Camera.canceled += _ => m_CameraInput = Vector2.zero;
 
-                m_InputActions.PlayerActions.RB.performed += i => rbInput = true;
-                m_InputActions.PlayerActions.RB.canceled += i => rbInput = false;
-                m_InputActions.PlayerActions.RT.performed += i => rtInput = true;
-                m_InputActions.PlayerActions.RT.canceled += i => rtInput = false;
+                m_InputActions.PlayerActions.RB.performed += i =>
+                {
+                    rbInput = true;
+                    StartCoroutine(PressButton(EButton.Rb));
+                };
+                m_InputActions.PlayerActions.RB.canceled += i =>
+                {
+                    rbInput = false;
+                };
+                m_InputActions.PlayerActions.RT.performed += i =>
+                {
+                    rtInput = true;
+                    StartCoroutine(PressButton(EButton.Rt));
+                };
+                m_InputActions.PlayerActions.RT.canceled += i =>
+                {
+                    rtInput = false;
+                };
 
                 m_InputActions.PlayerActions.RollAndSprint.performed += ctx =>
                 {
@@ -57,6 +81,41 @@ namespace Code.Runtime.Battle.MonoBehavior
 
                 m_InputActions.PlayerMovement.Enable();
                 m_InputActions.PlayerActions.Enable();
+            }
+        }
+
+        private IEnumerator PressButton(EButton button)
+        {
+            switch (button)
+            {
+                case EButton.Rb:
+                    rbInputBuffer = true;
+                    rtInputBuffer = false;
+                    break;
+                case EButton.Rt:
+                    rbInputBuffer = false;
+                    rtInputBuffer = true;
+                    break;
+                case EButton.B:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(button), button, null);
+            }
+
+            yield return new WaitForSeconds(ConstConfig.D[10012].Value / 1000f);
+            
+            switch (button)
+            {
+                case EButton.Rb:
+                    rbInputBuffer = false;
+                    break;
+                case EButton.Rt:
+                    rtInputBuffer = false;
+                    break;
+                case EButton.B:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(button), button, null);
             }
         }
 
@@ -92,36 +151,28 @@ namespace Code.Runtime.Battle.MonoBehavior
 
         private void HandleAttackInput(float delta)
         {
-            if (rbInput)
+            if (m_PlayerCore.canDoCombo)
             {
-                if (m_PlayerCore.canDoCombo)
+                if (rbInputBuffer)
                 {
-                    comboFlag = true;
-                    m_PlayerCore.PlayerAttacker.HandleWeaponCombo(m_PlayerCore.PlayerInventory.rightWeapon, true);
-                    comboFlag = false;
+                    m_PlayerCore.PlayerAttacker.HandleWeaponCombo(m_PlayerCore.PlayerInventory.rightWeapon,
+                        true);
                 }
-                else
+                
+                if (rtInputBuffer)
                 {
-                    if (m_PlayerCore.isInteracting)
-                        return;
-                    m_PlayerCore.PlayerAttacker.HandleLightAttack(m_PlayerCore.PlayerInventory.rightWeapon);
+                    m_PlayerCore.PlayerAttacker.HandleWeaponCombo(m_PlayerCore.PlayerInventory.rightWeapon,
+                        false);
                 }
             }
-
-            if (rtInput)
+            else
             {
-                if (m_PlayerCore.canDoCombo)
-                {
-                    comboFlag = true;
-                    m_PlayerCore.PlayerAttacker.HandleWeaponCombo(m_PlayerCore.PlayerInventory.rightWeapon, false);
-                    comboFlag = false;
-                }
-                else
-                {
-                    if (m_PlayerCore.isInteracting)
-                        return;
+                if (m_PlayerCore.isInteracting)
+                    return;
+                if (rbInputBuffer)
+                    m_PlayerCore.PlayerAttacker.HandleLightAttack(m_PlayerCore.PlayerInventory.rightWeapon);
+                if (rtInputBuffer)
                     m_PlayerCore.PlayerAttacker.HandleHeavyAttack(m_PlayerCore.PlayerInventory.rightWeapon);
-                }
             }
         }
     }
