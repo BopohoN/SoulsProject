@@ -1,52 +1,59 @@
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 namespace Code.Runtime.Battle.MonoBehavior
 {
     public class PlayerInventory : MonoBehaviour
     {
-        public int RightWeapon => m_RightHandWeaponSlots[currentRightSlotIndex];
-        public int LeftWeapon => m_LeftHandWeaponSlots[currentLeftSlotIndex];
+        public int RightWeapon => rightHandWeaponSlots[currentRightSlotIndex];
+        public int LeftWeapon => leftHandWeaponSlots[currentLeftSlotIndex];
         private WeaponSlotManager m_WeaponSlotManager;
 
         [SerializeField]
-        private int[] m_RightHandWeaponSlots = new int[3];
+        private int[] rightHandWeaponSlots = new int[3];
         [SerializeField]
-        private int[] m_LeftHandWeaponSlots = new int[3];
+        private int[] leftHandWeaponSlots = new int[3];
 
         public int currentRightSlotIndex = 0;
         public int currentLeftSlotIndex = 0;
+        private PlayerCore m_PlayerCore;
 
         private void Awake()
         {
             m_WeaponSlotManager = GetComponentInChildren<WeaponSlotManager>();
+            m_PlayerCore = GetComponent<PlayerCore>();
         }
 
         private void Start()
         {
-            m_RightHandWeaponSlots[0] = 0;
-            m_RightHandWeaponSlots[1] = 30001;
-            m_RightHandWeaponSlots[2] = 0;
-            m_LeftHandWeaponSlots[0] = 0;
-            m_LeftHandWeaponSlots[1] = 0;
-            m_LeftHandWeaponSlots[2] = 0;
+            rightHandWeaponSlots[0] = 0;
+            rightHandWeaponSlots[1] = 30001;
+            rightHandWeaponSlots[2] = 0;
+            leftHandWeaponSlots[0] = 0;
+            leftHandWeaponSlots[1] = 0;
+            leftHandWeaponSlots[2] = 0;
             m_WeaponSlotManager.LoadWeaponOnSlot(RightWeapon, false);
             m_WeaponSlotManager.LoadWeaponOnSlot(LeftWeapon, true);
+
+            m_PlayerCore.PlayerInput.OnDRightPressed += ChangeRightWeapon;
+            m_PlayerCore.PlayerInput.OnDLeftPressed += ChangeLeftWeapon;
         }
 
-        public void ChangeRightWeapon()
+        private void ChangeRightWeapon(InputAction.CallbackContext ctx)
         {
-            if (m_RightHandWeaponSlots.All(weaponId => weaponId == 0)) //玩家没有装备任何武器
+            if (rightHandWeaponSlots.All(weaponId => weaponId == 0)) //玩家没有装备任何武器
                 return;
             
-            var currentWeaponId = m_RightHandWeaponSlots[currentRightSlotIndex];
+            var currentWeaponId = rightHandWeaponSlots[currentRightSlotIndex];
             if (currentWeaponId == 0) //如果玩家目前是空手状态
             {
                 //那么就调过所有的空槽位切换成下一个武器
-                if (currentRightSlotIndex + 1 > m_RightHandWeaponSlots.Length -1)
+                if (currentRightSlotIndex + 1 > rightHandWeaponSlots.Length -1)
                 {
                     var nextSlotIndex = 0;
-                    while (m_RightHandWeaponSlots[nextSlotIndex] == currentWeaponId)
+                    while (rightHandWeaponSlots[nextSlotIndex] == currentWeaponId)
                         nextSlotIndex++;
                     currentRightSlotIndex = nextSlotIndex;
                 }
@@ -55,12 +62,12 @@ namespace Code.Runtime.Battle.MonoBehavior
                     do
                     {
                         currentRightSlotIndex++;
-                    } while (m_RightHandWeaponSlots[currentRightSlotIndex] == currentWeaponId);
+                    } while (rightHandWeaponSlots[currentRightSlotIndex] == currentWeaponId);
                 }
             }
             else //如果玩家目前有武器，那么就切换成下一个槽位
             {
-                if (currentRightSlotIndex + 1 >= m_RightHandWeaponSlots.Length)
+                if (currentRightSlotIndex + 1 >= rightHandWeaponSlots.Length)
                     currentRightSlotIndex = 0;
                 else
                     currentRightSlotIndex++;
@@ -69,19 +76,19 @@ namespace Code.Runtime.Battle.MonoBehavior
             m_WeaponSlotManager.LoadWeaponOnSlot(RightWeapon, false);
         }
 
-        public void ChangeLeftWeapon()
+        private void ChangeLeftWeapon(InputAction.CallbackContext ctx)
         {
-            if (m_LeftHandWeaponSlots.All(weaponId => weaponId == 0)) //玩家没有装备任何武器
+            if (leftHandWeaponSlots.All(weaponId => weaponId == 0)) //玩家没有装备任何武器
                 return;
             
-            var currentWeaponId = m_LeftHandWeaponSlots[currentLeftSlotIndex];
+            var currentWeaponId = leftHandWeaponSlots[currentLeftSlotIndex];
             if (currentWeaponId == 0) //如果玩家目前是空手状态
             {
                 //那么就调过所有的空槽位切换成下一个武器
-                if (currentLeftSlotIndex + 1 > m_LeftHandWeaponSlots.Length -1)
+                if (currentLeftSlotIndex + 1 > leftHandWeaponSlots.Length -1)
                 {
                     var nextSlotIndex = 0;
-                    while (m_LeftHandWeaponSlots[nextSlotIndex] == currentWeaponId)
+                    while (leftHandWeaponSlots[nextSlotIndex] == currentWeaponId)
                         nextSlotIndex++;
                     currentLeftSlotIndex = nextSlotIndex;
                 }
@@ -90,12 +97,12 @@ namespace Code.Runtime.Battle.MonoBehavior
                     do
                     {
                         currentLeftSlotIndex++;
-                    } while (m_LeftHandWeaponSlots[currentLeftSlotIndex] == currentWeaponId);
+                    } while (leftHandWeaponSlots[currentLeftSlotIndex] == currentWeaponId);
                 }
             }
             else //如果玩家目前有武器，那么就切换成下一个槽位
             {
-                if (currentLeftSlotIndex + 1 >= m_LeftHandWeaponSlots.Length)
+                if (currentLeftSlotIndex + 1 >= leftHandWeaponSlots.Length)
                     currentLeftSlotIndex = 0;
                 else
                     currentLeftSlotIndex++;

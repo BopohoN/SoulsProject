@@ -24,7 +24,6 @@ namespace Code.Runtime.Battle.MonoBehavior.Enemy
         private void OnAnimatorMovement(Animator animator)
         {
             m_RigidBody.drag = 0f;
-            Debug.Log("animator.deltaPosition = " + animator.deltaPosition);
             var deltaPosition = animator.deltaPosition;
             m_RigidBody.velocity = new Vector3(deltaPosition.x, 0, deltaPosition.z) / Time.deltaTime;
         }

@@ -84,14 +84,20 @@ namespace Code.Runtime.Battle.MonoBehavior
 
                 m_InputActions.PlayerActions.RollAndSprint.canceled += ctx => { OnBRelease?.Invoke(ctx); };
 
-                m_InputActions.PlayerQuickInventory.DPadUp.performed += _ => dPadUp = true;
-                m_InputActions.PlayerQuickInventory.DPadUp.canceled += _ => dPadUp = false;
-                m_InputActions.PlayerQuickInventory.DPadDown.performed += _ => dPadDown = true;
-                m_InputActions.PlayerQuickInventory.DPadDown.canceled += _ => dPadDown = false;
-                m_InputActions.PlayerQuickInventory.DPadRight.performed += _ => dPadRight = true;
-                m_InputActions.PlayerQuickInventory.DPadRight.canceled += _ => dPadRight = false;
-                m_InputActions.PlayerQuickInventory.DPadLeft.performed += _ => dPadLeft = true;
-                m_InputActions.PlayerQuickInventory.DPadLeft.canceled += _ => dPadLeft = false;
+                m_InputActions.PlayerQuickInventory.DPadLeft.performed += ctx =>
+                {
+                    if (ctx.interaction is HoldInteraction)
+                        OnDLeftHold?.Invoke(ctx);
+                    else if (ctx.interaction is TapInteraction)
+                        OnDLeftPressed?.Invoke(ctx);
+                };
+                m_InputActions.PlayerQuickInventory.DPadRight.performed += ctx =>
+                {
+                    if (ctx.interaction is HoldInteraction)
+                        OnDRightHold?.Invoke(ctx);
+                    else if (ctx.interaction is TapInteraction)
+                        OnDRightPressed?.Invoke(ctx);
+                };
                 
                 m_InputActions.PlayerMovement.Enable();
                 m_InputActions.PlayerActions.Enable();
@@ -148,12 +154,15 @@ namespace Code.Runtime.Battle.MonoBehavior
         public event Action<InputAction.CallbackContext> OnBPressed;
         public event Action<InputAction.CallbackContext> OnBHold;
         public event Action<InputAction.CallbackContext> OnBRelease;
+        public event Action<InputAction.CallbackContext> OnDLeftPressed;
+        public event Action<InputAction.CallbackContext> OnDLeftHold;
+        public event Action<InputAction.CallbackContext> OnDRightPressed;
+        public event Action<InputAction.CallbackContext> OnDRightHold;
 
         public void TickInput(float delta)
         {
             MoveInput(delta);
             HandleAttackInput(delta);
-            HandleQuickSlotInput();
         }
 
         private void MoveInput(float delta)
@@ -189,18 +198,6 @@ namespace Code.Runtime.Battle.MonoBehavior
                     m_PlayerCore.PlayerAttacker.HandleLightAttack(m_PlayerCore.PlayerInventory.RightWeapon);
                 if (rtInputBuffer)
                     m_PlayerCore.PlayerAttacker.HandleHeavyAttack(m_PlayerCore.PlayerInventory.RightWeapon);
-            }
-        }
-
-        private void HandleQuickSlotInput()
-        {
-            if (dPadRight)
-            {
-                m_PlayerCore.PlayerInventory.ChangeRightWeapon();
-            }
-            else if (dPadLeft)
-            {
-                m_PlayerCore.PlayerInventory.ChangeLeftWeapon();
             }
         }
     }
