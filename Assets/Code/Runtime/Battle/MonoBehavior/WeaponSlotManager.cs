@@ -10,8 +10,8 @@ namespace Code.Runtime.Battle.MonoBehavior
         private WeaponHolderSlot m_LeftHandSlot;
         private DamageCollider m_RightHandDamageCollider;
         private WeaponHolderSlot m_RightHandSlot;
-        public bool readyToLoadWeapon;
-        public bool switchingWeapon;
+        public bool ReadyToLoadWeapon { get; private set; }
+        public bool SwitchingWeapon { get; private set; }
 
         private void Awake()
         {
@@ -27,12 +27,12 @@ namespace Code.Runtime.Battle.MonoBehavior
         //Animator Event
         public void SetReadyToLoadWeapon(int value)
         {
-            readyToLoadWeapon = value == 1;
+            ReadyToLoadWeapon = value == 1;
         }
 
-        public void SetSwitchingWeapon(int value)
+        public void SetSwitchingWeapon(bool value)
         {
-            switchingWeapon = value == 1;
+            SwitchingWeapon = value;
         }
 
         public void LoadWeaponOnSlot(int weaponId, bool isLeft)
