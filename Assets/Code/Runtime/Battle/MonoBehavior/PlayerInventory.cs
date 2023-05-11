@@ -1,4 +1,5 @@
 using System.Linq;
+using Code.Configuration;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -43,6 +44,9 @@ namespace Code.Runtime.Battle.MonoBehavior
 
         private void ChangeRightWeapon(InputAction.CallbackContext ctx)
         {
+            if (m_PlayerCore.isInteracting) //玩家正在交互中
+                return;
+            
             if (rightHandWeaponSlots.All(weaponId => weaponId == 0)) //玩家没有装备任何武器
                 return;
             
@@ -74,10 +78,15 @@ namespace Code.Runtime.Battle.MonoBehavior
             }
             
             m_WeaponSlotManager.LoadWeaponOnSlot(RightWeapon, false);
+            m_PlayerCore.AnimatorController.PlayTargetAnimation(
+                string.Format(WeaponConfig.D[RightWeapon].OneHandEquipAnimation, "R"), false);
         }
 
         private void ChangeLeftWeapon(InputAction.CallbackContext ctx)
         {
+            if (m_PlayerCore.isInteracting) //玩家正在交互中
+                return;
+
             if (leftHandWeaponSlots.All(weaponId => weaponId == 0)) //玩家没有装备任何武器
                 return;
             
@@ -109,6 +118,8 @@ namespace Code.Runtime.Battle.MonoBehavior
             }
             
             m_WeaponSlotManager.LoadWeaponOnSlot(LeftWeapon, true);
+            m_PlayerCore.AnimatorController.PlayTargetAnimation(
+                string.Format(WeaponConfig.D[LeftWeapon].OneHandEquipAnimation, "L"), false);
         }
     }
 }
