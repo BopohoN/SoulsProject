@@ -21,6 +21,11 @@ namespace Code.Runtime.Battle.MonoBehavior
         public bool rtInput;
         public bool rtInputBuffer;
 
+        public bool dPadUp;
+        public bool dPadDown;
+        public bool dPadLeft;
+        public bool dPadRight;
+
         private Vector2 m_CameraInput;
 
         private PlayerInputActions m_InputActions;
@@ -79,8 +84,18 @@ namespace Code.Runtime.Battle.MonoBehavior
 
                 m_InputActions.PlayerActions.RollAndSprint.canceled += ctx => { OnBRelease?.Invoke(ctx); };
 
+                m_InputActions.PlayerQuickInventory.DPadUp.performed += _ => dPadUp = true;
+                m_InputActions.PlayerQuickInventory.DPadUp.canceled += _ => dPadUp = false;
+                m_InputActions.PlayerQuickInventory.DPadDown.performed += _ => dPadDown = true;
+                m_InputActions.PlayerQuickInventory.DPadDown.canceled += _ => dPadDown = false;
+                m_InputActions.PlayerQuickInventory.DPadRight.performed += _ => dPadRight = true;
+                m_InputActions.PlayerQuickInventory.DPadRight.canceled += _ => dPadRight = false;
+                m_InputActions.PlayerQuickInventory.DPadLeft.performed += _ => dPadLeft = true;
+                m_InputActions.PlayerQuickInventory.DPadLeft.canceled += _ => dPadLeft = false;
+                
                 m_InputActions.PlayerMovement.Enable();
                 m_InputActions.PlayerActions.Enable();
+                m_InputActions.PlayerQuickInventory.Enable();
             }
         }
 
@@ -138,6 +153,7 @@ namespace Code.Runtime.Battle.MonoBehavior
         {
             MoveInput(delta);
             HandleAttackInput(delta);
+            HandleQuickSlotInput();
         }
 
         private void MoveInput(float delta)
@@ -155,13 +171,13 @@ namespace Code.Runtime.Battle.MonoBehavior
             {
                 if (rbInputBuffer)
                 {
-                    m_PlayerCore.PlayerAttacker.HandleWeaponCombo(m_PlayerCore.PlayerInventory.rightWeapon,
+                    m_PlayerCore.PlayerAttacker.HandleWeaponCombo(m_PlayerCore.PlayerInventory.RightWeapon,
                         true);
                 }
                 
                 if (rtInputBuffer)
                 {
-                    m_PlayerCore.PlayerAttacker.HandleWeaponCombo(m_PlayerCore.PlayerInventory.rightWeapon,
+                    m_PlayerCore.PlayerAttacker.HandleWeaponCombo(m_PlayerCore.PlayerInventory.RightWeapon,
                         false);
                 }
             }
@@ -170,9 +186,21 @@ namespace Code.Runtime.Battle.MonoBehavior
                 if (m_PlayerCore.isInteracting)
                     return;
                 if (rbInputBuffer)
-                    m_PlayerCore.PlayerAttacker.HandleLightAttack(m_PlayerCore.PlayerInventory.rightWeapon);
+                    m_PlayerCore.PlayerAttacker.HandleLightAttack(m_PlayerCore.PlayerInventory.RightWeapon);
                 if (rtInputBuffer)
-                    m_PlayerCore.PlayerAttacker.HandleHeavyAttack(m_PlayerCore.PlayerInventory.rightWeapon);
+                    m_PlayerCore.PlayerAttacker.HandleHeavyAttack(m_PlayerCore.PlayerInventory.RightWeapon);
+            }
+        }
+
+        private void HandleQuickSlotInput()
+        {
+            if (dPadRight)
+            {
+                m_PlayerCore.PlayerInventory.ChangeRightWeapon();
+            }
+            else if (dPadLeft)
+            {
+                m_PlayerCore.PlayerInventory.ChangeLeftWeapon();
             }
         }
     }

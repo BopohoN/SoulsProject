@@ -25,12 +25,8 @@ namespace Code.Runtime.Battle.MonoBehavior
 
         public void LoadWeaponModel(int weaponId)
         {
-            if (weaponId == -1)
-            {
-                UnloadWeapon();
-                return;
-            }
-
+            UnloadWeaponAndDestroy();
+            
             if (!WeaponConfig.D.ContainsKey(weaponId))
             {
                 Debug.LogError("Weapon :" + weaponId + " does not exist.");

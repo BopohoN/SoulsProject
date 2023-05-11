@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2227921843769266122}
   - component: {fileID: 3415518846530874784}
   - component: {fileID: 7201934786385536720}
-  m_Layer: 10
+  m_Layer: 23
   m_Name: Enemy
   m_TagString: Hittable
   m_Icon: {fileID: 0}
@@ -34,7 +34,7 @@ Transform:
   m_Children:
   - {fileID: 1395322113714830001}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &195060136684899957
 CapsuleCollider:

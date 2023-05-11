@@ -5,7 +5,7 @@ namespace Code.Runtime.Battle.MonoBehavior
 {
     public class DamageCollider : MonoBehaviour
     {
-        public int currentWeaponDamage;
+        public int CurrentWeaponDamage { get; private set; }
         private Collider m_DamageCollider;
         private Vector3 m_LastFramePos;
 
@@ -15,6 +15,11 @@ namespace Code.Runtime.Battle.MonoBehavior
             m_DamageCollider.gameObject.SetActive(true);
             m_DamageCollider.isTrigger = true;
             m_DamageCollider.enabled = false;
+        }
+
+        public void SetWeaponAtk(int value)
+        {
+            CurrentWeaponDamage = value;
         }
 
         public void FixedUpdate()
@@ -35,7 +40,7 @@ namespace Code.Runtime.Battle.MonoBehavior
                     var playerStats = other.GetComponent<PlayerStats>();
 
                     if (playerStats != null)
-                        playerStats.TakeDamage(currentWeaponDamage, damageVec);
+                        playerStats.TakeDamage(CurrentWeaponDamage, damageVec);
                     return;
                 }
 
@@ -44,7 +49,7 @@ namespace Code.Runtime.Battle.MonoBehavior
                     var enemyStats = other.GetComponent<EnemyStates>();
 
                     if (enemyStats != null)
-                        enemyStats.TakeDamage(currentWeaponDamage, damageVec);
+                        enemyStats.TakeDamage(CurrentWeaponDamage, damageVec);
                 }
             }
         }

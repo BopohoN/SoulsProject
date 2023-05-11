@@ -138,8 +138,13 @@ MonoBehaviour:
   mouseX: 0
   mouseY: 0
   rbInput: 0
+  rbInputBuffer: 0
   rtInput: 0
-  comboFlag: 0
+  rtInputBuffer: 0
+  dPadUp: 0
+  dPadDown: 0
+  dPadLeft: 0
+  dPadRight: 0
 --- !u!114 &6336172752059486059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,8 +157,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42299205e14413a4c8ce933e5f88c1e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightWeapon: 30001
-  leftWeapon: -1
+  m_RightHandWeaponSlots: 000000000000000000000000
+  m_LeftHandWeaponSlots: 000000000000000000000000
+  currentRightSlotIndex: 0
+  currentLeftSlotIndex: 0
 --- !u!114 &6238655142861452529
 MonoBehaviour:
   m_ObjectHideFlags: 0

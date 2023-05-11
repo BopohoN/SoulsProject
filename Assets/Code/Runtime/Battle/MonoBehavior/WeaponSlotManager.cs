@@ -1,3 +1,4 @@
+using Code.Configuration;
 using UnityEngine;
 
 namespace Code.Runtime.Battle.MonoBehavior
@@ -25,25 +26,25 @@ namespace Code.Runtime.Battle.MonoBehavior
             if (isLeft)
             {
                 m_LeftHandSlot.LoadWeaponModel(weaponId);
-                if (weaponId >= 0)
-                    LoadLeftWeaponDamageCollider();
+                LoadLeftWeaponDamageCollider(weaponId);
             }
             else
             {
                 m_RightHandSlot.LoadWeaponModel(weaponId);
-                if (weaponId >= 0)
-                    LoadRightWeaponDamageCollider();
+                LoadRightWeaponDamageCollider(weaponId);
             }
         }
 
-        private void LoadLeftWeaponDamageCollider()
+        private void LoadLeftWeaponDamageCollider(int weaponId)
         {
             m_LeftHandDamageCollider = m_LeftHandSlot.currentWeaponModel.GetComponentInChildren<DamageCollider>();
+            m_LeftHandDamageCollider.SetWeaponAtk(WeaponConfig.D[weaponId].Atk);
         }
 
-        private void LoadRightWeaponDamageCollider()
+        private void LoadRightWeaponDamageCollider(int weaponId)
         {
             m_RightHandDamageCollider = m_RightHandSlot.currentWeaponModel.GetComponentInChildren<DamageCollider>();
+            m_RightHandDamageCollider.SetWeaponAtk(WeaponConfig.D[weaponId].Atk);
         }
 
         //Animation Events
