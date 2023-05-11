@@ -17,6 +17,8 @@ namespace Code.Configuration
 		public string Prefab { get; private set; }
 		public int LightAttackActionId { get; private set; }
 		public int HeavyAttackActionId { get; private set; }
+		public string OneHandEquipAnimation { get; private set; }
+		public string TwoHandEquipAnimation { get; private set; }
 
         public static Dictionary<int, WeaponConfig> D = null;
         public const string ConfigName = "WeaponConfig";
@@ -45,6 +47,8 @@ namespace Code.Configuration
 					Prefab = configDeserializer.ReadString(),
 					LightAttackActionId = configDeserializer.ReadInt(),
 					HeavyAttackActionId = configDeserializer.ReadInt(),
+					OneHandEquipAnimation = configDeserializer.ReadString(),
+					TwoHandEquipAnimation = configDeserializer.ReadString(),
 
                 });
             }
