@@ -1,5 +1,6 @@
 using Code.Configuration;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Code.Runtime.Battle.MonoBehavior
 {
@@ -9,6 +10,8 @@ namespace Code.Runtime.Battle.MonoBehavior
         private WeaponHolderSlot m_LeftHandSlot;
         private DamageCollider m_RightHandDamageCollider;
         private WeaponHolderSlot m_RightHandSlot;
+        public bool readyToLoadWeapon;
+        public bool switchingWeapon;
 
         private void Awake()
         {
@@ -19,6 +22,17 @@ namespace Code.Runtime.Battle.MonoBehavior
                     m_LeftHandSlot = slot;
                 else
                     m_RightHandSlot = slot;
+        }
+
+        //Animator Event
+        public void SetReadyToLoadWeapon(int value)
+        {
+            readyToLoadWeapon = value == 1;
+        }
+
+        public void SetSwitchingWeapon(int value)
+        {
+            switchingWeapon = value == 1;
         }
 
         public void LoadWeaponOnSlot(int weaponId, bool isLeft)

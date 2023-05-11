@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using Code.Configuration;
 using UnityEngine;
@@ -46,6 +47,8 @@ namespace Code.Runtime.Battle.MonoBehavior
         {
             if (m_PlayerCore.isInteracting) //玩家正在交互中
                 return;
+            if (m_WeaponSlotManager.switchingWeapon)
+                return;
             
             if (rightHandWeaponSlots.All(weaponId => weaponId == 0)) //玩家没有装备任何武器
                 return;
@@ -76,15 +79,16 @@ namespace Code.Runtime.Battle.MonoBehavior
                 else
                     currentRightSlotIndex++;
             }
-            
-            m_WeaponSlotManager.LoadWeaponOnSlot(RightWeapon, false);
             m_PlayerCore.AnimatorController.PlayTargetAnimation(
                 string.Format(WeaponConfig.D[RightWeapon].OneHandEquipAnimation, "R"), false);
+            StartCoroutine(LoadRightWeapon());
         }
 
         private void ChangeLeftWeapon(InputAction.CallbackContext ctx)
         {
             if (m_PlayerCore.isInteracting) //玩家正在交互中
+                return;
+            if (m_WeaponSlotManager.switchingWeapon)
                 return;
 
             if (leftHandWeaponSlots.All(weaponId => weaponId == 0)) //玩家没有装备任何武器
@@ -117,9 +121,24 @@ namespace Code.Runtime.Battle.MonoBehavior
                     currentLeftSlotIndex++;
             }
             
-            m_WeaponSlotManager.LoadWeaponOnSlot(LeftWeapon, true);
             m_PlayerCore.AnimatorController.PlayTargetAnimation(
                 string.Format(WeaponConfig.D[LeftWeapon].OneHandEquipAnimation, "L"), false);
+            StartCoroutine(LoadLeftWeapon());
         }
+        
+        private IEnumerator LoadRightWeapon()
+        {
+            while (!m_WeaponSlotManager.readyToLoadWeapon)
+                yield return new WaitForEndOfFrame();
+            m_WeaponSlotManager.LoadWeaponOnSlot(RightWeapon, false);
+        }
+
+        private IEnumerator LoadLeftWeapon()
+        {
+            while (!m_WeaponSlotManager.readyToLoadWeapon)
+                yield return new WaitForEndOfFrame();
+            m_WeaponSlotManager.LoadWeaponOnSlot(LeftWeapon, true);
+        }
+
     }
 }

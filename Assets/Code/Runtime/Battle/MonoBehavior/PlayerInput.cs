@@ -21,11 +21,6 @@ namespace Code.Runtime.Battle.MonoBehavior
         public bool rtInput;
         public bool rtInputBuffer;
 
-        public bool dPadUp;
-        public bool dPadDown;
-        public bool dPadLeft;
-        public bool dPadRight;
-
         private Vector2 m_CameraInput;
 
         private PlayerInputActions m_InputActions;

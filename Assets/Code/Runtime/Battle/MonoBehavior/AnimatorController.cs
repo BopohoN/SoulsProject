@@ -58,6 +58,12 @@ namespace Code.Runtime.Battle.MonoBehavior
             m_Anim.CrossFade(targetAnim, 0.2f);
         }
 
+        public void SetLayerWeight(string layerName, float weight)
+        {
+            var index = m_Anim.GetLayerIndex(layerName);
+            m_Anim.SetLayerWeight(index,weight);
+        }
+
         public void SetCanDoCombo(bool value)
         {
             m_Anim.SetBool(CanDoCombo, value);
