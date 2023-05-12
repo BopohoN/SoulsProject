@@ -3,7 +3,6 @@ using System.Linq;
 using Code.Configuration;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 namespace Code.Runtime.Battle.MonoBehavior
 {
@@ -11,7 +10,7 @@ namespace Code.Runtime.Battle.MonoBehavior
     {
         public int RightWeapon => rightHandWeaponSlots[currentRightSlotIndex];
         public int LeftWeapon => leftHandWeaponSlots[currentLeftSlotIndex];
-        private WeaponSlotManager m_WeaponSlotManager;
+        public WeaponSlotManager WeaponSlotManager { get; set; }
 
         [SerializeField]
         private int[] rightHandWeaponSlots = new int[3];
@@ -24,7 +23,7 @@ namespace Code.Runtime.Battle.MonoBehavior
 
         private void Awake()
         {
-            m_WeaponSlotManager = GetComponentInChildren<WeaponSlotManager>();
+            WeaponSlotManager = GetComponentInChildren<WeaponSlotManager>();
             m_PlayerCore = GetComponent<PlayerCore>();
         }
 
@@ -36,8 +35,8 @@ namespace Code.Runtime.Battle.MonoBehavior
             leftHandWeaponSlots[0] = 0;
             leftHandWeaponSlots[1] = 0;
             leftHandWeaponSlots[2] = 0;
-            m_WeaponSlotManager.LoadWeaponOnSlot(RightWeapon, false);
-            m_WeaponSlotManager.LoadWeaponOnSlot(LeftWeapon, true);
+            WeaponSlotManager.LoadWeaponOnSlot(RightWeapon, false);
+            WeaponSlotManager.LoadWeaponOnSlot(LeftWeapon, true);
 
             m_PlayerCore.PlayerInput.OnDRightPressed += ChangeRightWeapon;
             m_PlayerCore.PlayerInput.OnDLeftPressed += ChangeLeftWeapon;
@@ -47,7 +46,7 @@ namespace Code.Runtime.Battle.MonoBehavior
         {
             if (m_PlayerCore.isInteracting) //玩家正在交互中
                 return;
-            if (m_WeaponSlotManager.SwitchingWeapon)
+            if (WeaponSlotManager.SwitchingWeapon)
                 return;
             
             if (rightHandWeaponSlots.All(weaponId => weaponId == 0)) //玩家没有装备任何武器
@@ -88,7 +87,7 @@ namespace Code.Runtime.Battle.MonoBehavior
         {
             if (m_PlayerCore.isInteracting) //玩家正在交互中
                 return;
-            if (m_WeaponSlotManager.SwitchingWeapon)
+            if (WeaponSlotManager.SwitchingWeapon)
                 return;
 
             if (leftHandWeaponSlots.All(weaponId => weaponId == 0)) //玩家没有装备任何武器
@@ -128,22 +127,22 @@ namespace Code.Runtime.Battle.MonoBehavior
         
         private IEnumerator LoadRightWeapon()
         {
-            m_WeaponSlotManager.SetSwitchingWeapon(true);
-            while (!m_WeaponSlotManager.ReadyToLoadWeapon)
+            WeaponSlotManager.SetSwitchingWeapon(true);
+            while (!WeaponSlotManager.ReadyToLoadWeapon)
                 yield return new WaitForEndOfFrame();
-            m_WeaponSlotManager.LoadWeaponOnSlot(RightWeapon, false);
+            WeaponSlotManager.LoadWeaponOnSlot(RightWeapon, false);
             yield return new WaitForSeconds(0.5f);
-            m_WeaponSlotManager.SetSwitchingWeapon(false);
+            WeaponSlotManager.SetSwitchingWeapon(false);
         }
 
         private IEnumerator LoadLeftWeapon()
         {
-            m_WeaponSlotManager.SetSwitchingWeapon(true);
-            while (!m_WeaponSlotManager.ReadyToLoadWeapon)
+            WeaponSlotManager.SetSwitchingWeapon(true);
+            while (!WeaponSlotManager.ReadyToLoadWeapon)
                 yield return new WaitForEndOfFrame();
-            m_WeaponSlotManager.LoadWeaponOnSlot(LeftWeapon, true);
+            WeaponSlotManager.LoadWeaponOnSlot(LeftWeapon, true);
             yield return new WaitForSeconds(0.5f);
-            m_WeaponSlotManager.SetSwitchingWeapon(false);
+            WeaponSlotManager.SetSwitchingWeapon(false);
         }
 
     }

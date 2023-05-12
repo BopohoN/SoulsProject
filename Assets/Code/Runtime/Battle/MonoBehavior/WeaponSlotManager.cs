@@ -1,6 +1,6 @@
+using System;
 using Code.Configuration;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Code.Runtime.Battle.MonoBehavior
 {
@@ -10,6 +10,7 @@ namespace Code.Runtime.Battle.MonoBehavior
         private WeaponHolderSlot m_LeftHandSlot;
         private DamageCollider m_RightHandDamageCollider;
         private WeaponHolderSlot m_RightHandSlot;
+        private Action<bool, bool> m_DoDrainStamina;
         public bool ReadyToLoadWeapon { get; private set; }
         public bool SwitchingWeapon { get; private set; }
 
@@ -22,6 +23,11 @@ namespace Code.Runtime.Battle.MonoBehavior
                     m_LeftHandSlot = slot;
                 else
                     m_RightHandSlot = slot;
+        }
+
+        public void Init(Action<bool, bool> doDrainStamina)
+        {
+            m_DoDrainStamina = doDrainStamina;
         }
 
         //Animator Event
@@ -83,6 +89,29 @@ namespace Code.Runtime.Battle.MonoBehavior
         public void CloseLeftDamageCollider()
         {
             m_LeftHandDamageCollider.DisableDamageCollider();
+        }
+
+        //Animation Events
+        public void DrainStaminaLightRight()
+        {
+            m_DoDrainStamina?.Invoke(false, false);
+        }
+        
+        //Animation Events
+        public void DrainStaminaHeavyRight()
+        {
+            m_DoDrainStamina?.Invoke(true, false);
+        }
+        //Animation Events
+        public void DrainStaminaLightLeft()
+        {
+            m_DoDrainStamina?.Invoke(false, true);
+        }
+        
+        //Animation Events
+        public void DrainStaminaHeavyLeft()
+        {
+            m_DoDrainStamina?.Invoke(true, true);
         }
     }
 }

@@ -15,8 +15,11 @@ namespace Code.Configuration
 		public int Id { get; private set; }
 		public int Atk { get; private set; }
 		public string Prefab { get; private set; }
+		public int BaseStamina { get; private set; }
 		public int LightAttackActionId { get; private set; }
+		public float LightAttackStaminaMult { get; private set; }
 		public int HeavyAttackActionId { get; private set; }
+		public float HeavyAttackStaminaMult { get; private set; }
 		public string OneHandEquipAnimation { get; private set; }
 		public string TwoHandEquipAnimation { get; private set; }
 
@@ -45,8 +48,11 @@ namespace Code.Configuration
                     Id = id,
 					Atk = configDeserializer.ReadInt(),
 					Prefab = configDeserializer.ReadString(),
+					BaseStamina = configDeserializer.ReadInt(),
 					LightAttackActionId = configDeserializer.ReadInt(),
+					LightAttackStaminaMult = configDeserializer.ReadFloat(),
 					HeavyAttackActionId = configDeserializer.ReadInt(),
+					HeavyAttackStaminaMult = configDeserializer.ReadFloat(),
 					OneHandEquipAnimation = configDeserializer.ReadString(),
 					TwoHandEquipAnimation = configDeserializer.ReadString(),
 

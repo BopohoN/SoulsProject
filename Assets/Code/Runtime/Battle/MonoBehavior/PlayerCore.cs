@@ -17,6 +17,7 @@ namespace Code.Runtime.Battle.MonoBehavior
         public PlayerInput PlayerInput { get; private set; }
         public PlayerAttacker PlayerAttacker { get; private set; }
         public PlayerInventory PlayerInventory { get; private set; }
+        public PlayerStats PlayerStats { get; private set; }
         public Collider PlayerCollider { get; private set; }
 
         private void Awake()
@@ -27,6 +28,7 @@ namespace Code.Runtime.Battle.MonoBehavior
             PlayerInput = GetComponentInChildren<PlayerInput>();
             PlayerAttacker = GetComponentInChildren<PlayerAttacker>();
             PlayerInventory = GetComponentInChildren<PlayerInventory>();
+            PlayerStats = GetComponentInChildren<PlayerStats>();
         }
 
         private void Update()

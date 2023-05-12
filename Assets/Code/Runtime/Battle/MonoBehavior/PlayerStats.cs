@@ -2,7 +2,6 @@
 using Code.Runtime.Battle.Manager;
 using Code.Runtime.Battle.Ui;
 using Code.Runtime.Utility;
-using Code.Runtime.Utility.PolishExpression;
 using UnityEngine;
 
 namespace Code.Runtime.Battle.MonoBehavior
@@ -12,6 +11,10 @@ namespace Code.Runtime.Battle.MonoBehavior
         public int healthLevel = 10;
         public int maxHealth;
         public int currentHealth;
+        
+        public int staminaLevel = 6;
+        public int maxStamina;
+        public int currentStamina;
 
         private PlayerCore m_PlayerCore;
 
@@ -23,14 +26,35 @@ namespace Code.Runtime.Battle.MonoBehavior
         private void Start()
         {
             maxHealth = SetMaxHealthFromHealthLevel();
+            maxStamina = SetMaxStaminaFromStaminaLevel();
             currentHealth = maxHealth;
+            currentStamina = maxStamina;
         }
 
         private int SetMaxHealthFromHealthLevel()
         {
-            maxHealth = Mathf.FloorToInt(CalculateUtility.CalculateValueFromFormula(CalculateUtility.FormulaId.BaseHp,
-                healthLevel.ToString(), ConstConfig.D[10101].Value.ToString(), ConstConfig.D[10102].Value.ToString()));
-            return maxHealth;
+            var health = healthLevel <= ConstConfig.D[CalculateUtility.ConstId.HpSoftMaxLevel].Value
+                ? Mathf.FloorToInt(CalculateUtility.CalculateValueFromFormula(CalculateUtility.FormulaId.BaseHp,
+                    healthLevel.ToString(), ConstConfig.D[CalculateUtility.ConstId.HpSoftMaxLevel].Value.ToString(),
+                    ConstConfig.D[CalculateUtility.ConstId.HpSoftMaxValue].Value.ToString()))
+                : Mathf.FloorToInt(Mathf.Lerp(ConstConfig.D[CalculateUtility.ConstId.HpSoftMaxValue].Value,
+                    ConstConfig.D[CalculateUtility.ConstId.MaxHp].Value,
+                    Mathf.InverseLerp(ConstConfig.D[CalculateUtility.ConstId.HpSoftMaxLevel].Value,
+                        ConstConfig.D[CalculateUtility.ConstId.StatusMaxLevel].Value, healthLevel)));
+            return health;
+        }
+
+        private int SetMaxStaminaFromStaminaLevel()
+        {
+            var stamina = staminaLevel <= ConstConfig.D[CalculateUtility.ConstId.StaminaSoftMaxLevel].Value
+                ? Mathf.FloorToInt(CalculateUtility.CalculateValueFromFormula(CalculateUtility.FormulaId.BaseStamina,
+                    staminaLevel.ToString(), ConstConfig.D[CalculateUtility.ConstId.StaminaSoftMaxLevel].Value.ToString(),
+                    ConstConfig.D[CalculateUtility.ConstId.StaminaSoftMaxValue].Value.ToString()))
+                : Mathf.FloorToInt(Mathf.Lerp(ConstConfig.D[CalculateUtility.ConstId.StaminaSoftMaxValue].Value,
+                    ConstConfig.D[CalculateUtility.ConstId.MaxStamina].Value,
+                    Mathf.InverseLerp(ConstConfig.D[CalculateUtility.ConstId.StaminaSoftMaxLevel].Value,
+                        ConstConfig.D[CalculateUtility.ConstId.StatusMaxLevel].Value, staminaLevel)));
+            return stamina;
         }
 
         public void TakeDamage(int damage, Vector2 damageVec)
@@ -54,6 +78,17 @@ namespace Code.Runtime.Battle.MonoBehavior
             var damageDir = DamageUtility.CalculateDamageDirection(damageVec);
             m_PlayerCore.AnimatorController.SetDamageDir(damageDir);
             m_PlayerCore.AnimatorController.PlayTargetAnimation("Hit", true);
+        }
+
+        public void DrainStamina(float stamina)
+        {
+            var targetStamina = Mathf.FloorToInt(currentStamina - stamina);
+            currentStamina = Mathf.Clamp(targetStamina, ConstConfig.D[CalculateUtility.ConstId.MinStamina].Value,
+                maxStamina);
+            
+            var uiManager = m_PlayerCore.Core.GetMgr<UiManager>();
+            var battleMainUi = uiManager.GetUi<MainUi>(EBattleUi.MainUi);
+            battleMainUi.SetStaminaBar(currentStamina / (float) maxStamina);
         }
     }
 }

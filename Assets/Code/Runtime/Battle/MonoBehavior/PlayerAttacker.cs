@@ -1,4 +1,5 @@
-﻿using Code.Configuration;
+﻿using System;
+using Code.Configuration;
 using Code.Runtime.Utility;
 using UnityEngine;
 
@@ -8,11 +9,51 @@ namespace Code.Runtime.Battle.MonoBehavior
     {
         public int lastAttack;
         private PlayerCore m_PlayerCore;
+        public WeaponSlotManager WeaponSlotManager { get; set; }
 
         private void Awake()
         {
+            WeaponSlotManager = GetComponentInChildren<WeaponSlotManager>();
             m_PlayerCore = GetComponent<PlayerCore>();
         }
+
+        private void Start()
+        {
+            WeaponSlotManager.Init(DoDrainStamina);
+        }
+
+        private void DoDrainStamina(bool isHeavy, bool isLeft)
+        {
+            if (isLeft)
+            {
+                var currentWeapon = m_PlayerCore.PlayerInventory.LeftWeapon;
+                if (isHeavy)
+                {
+                    m_PlayerCore.PlayerStats.DrainStamina(WeaponConfig.D[currentWeapon].BaseStamina *
+                                                          WeaponConfig.D[currentWeapon].HeavyAttackStaminaMult);
+                }
+                else
+                {
+                    m_PlayerCore.PlayerStats.DrainStamina(WeaponConfig.D[currentWeapon].BaseStamina *
+                                                          WeaponConfig.D[currentWeapon].LightAttackStaminaMult);
+                }
+            }
+            else
+            {
+                var currentWeapon = m_PlayerCore.PlayerInventory.RightWeapon;
+                if (isHeavy)
+                {
+                    m_PlayerCore.PlayerStats.DrainStamina(WeaponConfig.D[currentWeapon].BaseStamina *
+                                                          WeaponConfig.D[currentWeapon].HeavyAttackStaminaMult);
+                }
+                else
+                {
+                    m_PlayerCore.PlayerStats.DrainStamina(WeaponConfig.D[currentWeapon].BaseStamina *
+                                                          WeaponConfig.D[currentWeapon].LightAttackStaminaMult);
+                }
+            }
+        }
+
 
         public void HandleWeaponCombo(int weaponId,bool isLight)
         {
@@ -27,7 +68,7 @@ namespace Code.Runtime.Battle.MonoBehavior
             }
             else
             {
-                if (isLastAttackLight)
+                if (isLight)
                     HandleLightAttack(weaponId);
                 else
                     HandleHeavyAttack(weaponId);
