@@ -13,8 +13,10 @@ namespace Code.Configuration
 		唯一ID
 		*/
 		public int Id { get; private set; }
+		public string Name { get; private set; }
 		public int Atk { get; private set; }
 		public string Prefab { get; private set; }
+		public string Icon { get; private set; }
 		public int BaseStamina { get; private set; }
 		public int LightAttackActionId { get; private set; }
 		public float LightAttackStaminaMult { get; private set; }
@@ -46,8 +48,10 @@ namespace Code.Configuration
                 D.Add(id, new WeaponConfig
                 {
                     Id = id,
+					Name = configDeserializer.ReadString(),
 					Atk = configDeserializer.ReadInt(),
 					Prefab = configDeserializer.ReadString(),
+					Icon = configDeserializer.ReadString(),
 					BaseStamina = configDeserializer.ReadInt(),
 					LightAttackActionId = configDeserializer.ReadInt(),
 					LightAttackStaminaMult = configDeserializer.ReadFloat(),

@@ -1,4 +1,6 @@
+using Code.Runtime.Battle.Manager;
 using Code.Runtime.Battle.MonoBehavior.Item;
+using Code.Runtime.Battle.Ui;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -70,16 +72,40 @@ namespace Code.Runtime.Battle.MonoBehavior.Player
         {
             void CancelInteractable()
             {
-                currentInteractableZone.hit.transform.GetComponent<Interactable>().RemoveCancelInteractListener();
                 PlayerInput.OnAPressed -= InteractInputListener;
+                var interactable = currentInteractableZone.hit.transform.GetComponent<Interactable>();
+                var uiManager = Core.GetMgr<UiManager>();
+                var battleMainUi = uiManager.GetUi<MainUi>(EBattleUi.MainUi);
+                battleMainUi.SetInteractTipsActive(false);
+                
+                interactable.RemoveCancelInteractListener();
                 isInInteractableZone = false;
-                currentInteractableZone = default;
+                currentInteractableZone = new InteractableZoneData
+                {
+                    hit = default,
+                    gId = -1
+                };
             }
 
             void InteractInputListener(InputAction.CallbackContext ctx)
             {
+                PlayerInput.OnAPressed -= InteractInputListener;
+                PlayerInput.OnAPressed += ClosePopUp;
                 var interactable = currentInteractableZone.hit.transform.GetComponent<Interactable>();
+                var uiManager = Core.GetMgr<UiManager>();
+                var battleMainUi = uiManager.GetUi<MainUi>(EBattleUi.MainUi);
                 interactable.Interact(this);
+                
+                battleMainUi.SetItemPopup(((WeaponItem) interactable).weaponId);
+                battleMainUi.SetItemPopupActive(true);
+            }
+
+            void ClosePopUp(InputAction.CallbackContext ctx)
+            {
+                PlayerInput.OnAPressed -= ClosePopUp;
+                var uiManager = Core.GetMgr<UiManager>();
+                var battleMainUi = uiManager.GetUi<MainUi>(EBattleUi.MainUi);
+                battleMainUi.SetItemPopupActive(false);
             }
 
             if (Physics.SphereCast(transform.position, 0.3f, transform.forward, out var hit, 1f, m_IgnoreLayers))
@@ -94,8 +120,13 @@ namespace Code.Runtime.Battle.MonoBehavior.Player
                             hit = hit,
                             gId = hit.transform.GetInstanceID()
                         };
+                        var interactable = currentInteractableZone.hit.transform.GetComponent<Interactable>();
+                        var uiManager = Core.GetMgr<UiManager>();
+                        var battleMainUi = uiManager.GetUi<MainUi>(EBattleUi.MainUi);
+                        battleMainUi.SetInteractTipsActive(true);
+                        battleMainUi.SetInteractTipsText(interactable.interactableText);
                         PlayerInput.OnAPressed += InteractInputListener;
-                        hit.transform.GetComponent<Interactable>().AddCancelInteractListener(CancelInteractable);
+                        interactable.AddCancelInteractListener(CancelInteractable);
                     }
                 }
             }

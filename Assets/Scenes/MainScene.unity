@@ -941,6 +941,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Item
       objectReference: {fileID: 0}
+    - target: {fileID: 5289439067901707767, guid: 8e049d56949f9cb4982439a758ac9c13, type: 3}
+      propertyPath: interactableText
+      value: "\u6361\u8D77"
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
