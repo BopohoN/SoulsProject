@@ -4,7 +4,7 @@ using Code.Configuration;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Code.Runtime.Battle.MonoBehavior
+namespace Code.Runtime.Battle.MonoBehavior.Player
 {
     public class PlayerInventory : MonoBehaviour
     {

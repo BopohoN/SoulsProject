@@ -4,7 +4,7 @@ using Code.Runtime.Battle.Ui;
 using Code.Runtime.Utility;
 using UnityEngine;
 
-namespace Code.Runtime.Battle.MonoBehavior
+namespace Code.Runtime.Battle.MonoBehavior.Player
 {
     public class PlayerStats : MonoBehaviour
     {

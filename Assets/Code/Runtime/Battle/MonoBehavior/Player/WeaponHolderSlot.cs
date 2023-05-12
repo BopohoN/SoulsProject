@@ -2,7 +2,7 @@ using Code.Configuration;
 using Code.Runtime.GameBase;
 using UnityEngine;
 
-namespace Code.Runtime.Battle.MonoBehavior
+namespace Code.Runtime.Battle.MonoBehavior.Player
 {
     public class WeaponHolderSlot : MonoBehaviour
     {

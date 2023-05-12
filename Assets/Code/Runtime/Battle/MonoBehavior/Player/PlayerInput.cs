@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 
-namespace Code.Runtime.Battle.MonoBehavior
+namespace Code.Runtime.Battle.MonoBehavior.Player
 {
     public class PlayerInput : MonoBehaviour
     {

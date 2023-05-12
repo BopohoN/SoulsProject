@@ -1,9 +1,8 @@
-﻿using System;
-using Code.Configuration;
+﻿using Code.Configuration;
 using Code.Runtime.Utility;
 using UnityEngine;
 
-namespace Code.Runtime.Battle.MonoBehavior
+namespace Code.Runtime.Battle.MonoBehavior.Player
 {
     public class PlayerAttacker : MonoBehaviour
     {

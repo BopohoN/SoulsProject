@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Code.Runtime.Battle.MonoBehavior
+namespace Code.Runtime.Battle.MonoBehavior.Player
 {
     public class PlayerCore : MonoBehaviour
     {

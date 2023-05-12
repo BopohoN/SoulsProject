@@ -2,7 +2,7 @@ using System;
 using Code.Configuration;
 using UnityEngine;
 
-namespace Code.Runtime.Battle.MonoBehavior
+namespace Code.Runtime.Battle.MonoBehavior.Player
 {
     public class WeaponSlotManager : MonoBehaviour
     {
