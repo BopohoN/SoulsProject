@@ -5,6 +5,7 @@ using Code.InputSystemActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
+using UnityEngine.Serialization;
 
 namespace Code.Runtime.Battle.MonoBehavior.Player
 {
@@ -16,6 +17,11 @@ namespace Code.Runtime.Battle.MonoBehavior.Player
         public float mouseX;
         public float mouseY;
 
+        public bool aInput;
+        public bool bInput;
+        public bool xInput;
+        public bool yInput;
+        
         public bool rbInput;
         public bool rbInputBuffer;
         public bool rtInput;
@@ -50,6 +56,7 @@ namespace Code.Runtime.Battle.MonoBehavior.Player
                 m_InputActions.PlayerMovement.Camera.performed += ctx => m_CameraInput = ctx.ReadValue<Vector2>();
                 m_InputActions.PlayerMovement.Camera.canceled += _ => m_CameraInput = Vector2.zero;
 
+                aInput = m_InputActions.PlayerActions.Interact.IsPressed();
                 m_InputActions.PlayerActions.RB.performed += i =>
                 {
                     rbInput = true;
@@ -69,15 +76,31 @@ namespace Code.Runtime.Battle.MonoBehavior.Player
                     rtInput = false;
                 };
 
+
+                m_InputActions.PlayerActions.Interact.performed += ctx =>
+                {
+                    OnAPressed?.Invoke(ctx);
+                };
+
+                m_InputActions.PlayerActions.Interact.canceled += ctx =>
+                {
+                    OnARelease?.Invoke(ctx);
+                };
+
                 m_InputActions.PlayerActions.RollAndSprint.performed += ctx =>
                 {
+                    bInput = true;
                     if (ctx.interaction is HoldInteraction)
                         OnBHold?.Invoke(ctx);
                     else if (ctx.interaction is TapInteraction)
                         OnBPressed?.Invoke(ctx);
                 };
 
-                m_InputActions.PlayerActions.RollAndSprint.canceled += ctx => { OnBRelease?.Invoke(ctx); };
+                m_InputActions.PlayerActions.RollAndSprint.canceled += ctx =>
+                {
+                    bInput = false;
+                    OnBRelease?.Invoke(ctx);
+                };
 
                 m_InputActions.PlayerQuickInventory.DPadLeft.performed += ctx =>
                 {
@@ -146,6 +169,8 @@ namespace Code.Runtime.Battle.MonoBehavior.Player
             m_InputActions.PlayerMovement.Disable();
         }
 
+        public event Action<InputAction.CallbackContext> OnAPressed;
+        public event Action<InputAction.CallbackContext> OnARelease;
         public event Action<InputAction.CallbackContext> OnBPressed;
         public event Action<InputAction.CallbackContext> OnBHold;
         public event Action<InputAction.CallbackContext> OnBRelease;

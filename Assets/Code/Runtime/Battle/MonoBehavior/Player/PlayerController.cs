@@ -34,6 +34,11 @@ namespace Code.Runtime.Battle.MonoBehavior.Player
             m_PlayerCore.PlayerInput.OnBRelease += ResetRollAndSprint;
         }
 
+        public void StopPlayerMove()
+        {
+            m_RigidBody.velocity = Vector3.zero;
+        }
+
         private void OnDestroy()
         {
             m_PlayerCore.PlayerInput.OnBPressed -= HandleRollingAndSprinting;

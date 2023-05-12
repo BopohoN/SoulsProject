@@ -103,6 +103,15 @@ namespace Code.InputSystemActions
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""09b796b3-d243-4d33-8f66-c2d6104882ea"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -136,6 +145,17 @@ namespace Code.InputSystemActions
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""RT"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ea317158-386e-49d7-b2b0-7f1aca033128"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -241,6 +261,7 @@ namespace Code.InputSystemActions
             m_PlayerActions_RollAndSprint = m_PlayerActions.FindAction("RollAndSprint", throwIfNotFound: true);
             m_PlayerActions_RB = m_PlayerActions.FindAction("RB", throwIfNotFound: true);
             m_PlayerActions_RT = m_PlayerActions.FindAction("RT", throwIfNotFound: true);
+            m_PlayerActions_Interact = m_PlayerActions.FindAction("Interact", throwIfNotFound: true);
             // Player Quick Inventory
             m_PlayerQuickInventory = asset.FindActionMap("Player Quick Inventory", throwIfNotFound: true);
             m_PlayerQuickInventory_DPadUp = m_PlayerQuickInventory.FindAction("D-Pad Up", throwIfNotFound: true);
@@ -365,6 +386,7 @@ namespace Code.InputSystemActions
         private readonly InputAction m_PlayerActions_RollAndSprint;
         private readonly InputAction m_PlayerActions_RB;
         private readonly InputAction m_PlayerActions_RT;
+        private readonly InputAction m_PlayerActions_Interact;
         public struct PlayerActionsActions
         {
             private @PlayerInputActions m_Wrapper;
@@ -372,6 +394,7 @@ namespace Code.InputSystemActions
             public InputAction @RollAndSprint => m_Wrapper.m_PlayerActions_RollAndSprint;
             public InputAction @RB => m_Wrapper.m_PlayerActions_RB;
             public InputAction @RT => m_Wrapper.m_PlayerActions_RT;
+            public InputAction @Interact => m_Wrapper.m_PlayerActions_Interact;
             public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -390,6 +413,9 @@ namespace Code.InputSystemActions
                 @RT.started += instance.OnRT;
                 @RT.performed += instance.OnRT;
                 @RT.canceled += instance.OnRT;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
             }
 
             private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -403,6 +429,9 @@ namespace Code.InputSystemActions
                 @RT.started -= instance.OnRT;
                 @RT.performed -= instance.OnRT;
                 @RT.canceled -= instance.OnRT;
+                @Interact.started -= instance.OnInteract;
+                @Interact.performed -= instance.OnInteract;
+                @Interact.canceled -= instance.OnInteract;
             }
 
             public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -500,6 +529,7 @@ namespace Code.InputSystemActions
             void OnRollAndSprint(InputAction.CallbackContext context);
             void OnRB(InputAction.CallbackContext context);
             void OnRT(InputAction.CallbackContext context);
+            void OnInteract(InputAction.CallbackContext context);
         }
         public interface IPlayerQuickInventoryActions
         {

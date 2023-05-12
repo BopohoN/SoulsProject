@@ -4,14 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Stair
-  - WallRun
-  - Climb
-  - Fly
-  - CinemachineTarget
-  - Animal
-  - Water
   - Hittable
+  - Interactable
   layers:
   - Default
   - TransparentFX

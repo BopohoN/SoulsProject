@@ -1,8 +1,10 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Code.Configuration;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 namespace Code.Runtime.Battle.MonoBehavior.Player
 {
@@ -17,6 +19,8 @@ namespace Code.Runtime.Battle.MonoBehavior.Player
         [SerializeField]
         private int[] leftHandWeaponSlots = new int[3];
 
+        public List<int> weaponInventory;
+        
         public int currentRightSlotIndex = 0;
         public int currentLeftSlotIndex = 0;
         private PlayerCore m_PlayerCore;
@@ -40,6 +44,11 @@ namespace Code.Runtime.Battle.MonoBehavior.Player
 
             m_PlayerCore.PlayerInput.OnDRightPressed += ChangeRightWeapon;
             m_PlayerCore.PlayerInput.OnDLeftPressed += ChangeLeftWeapon;
+        }
+
+        public void AddWeaponToInventory(int weaponId)
+        {
+            weaponInventory.Add(weaponId);
         }
 
         private void ChangeRightWeapon(InputAction.CallbackContext ctx)
