@@ -79,12 +79,7 @@ namespace Code.Runtime.Battle.MonoBehavior.Player
                 battleMainUi.SetInteractTipsActive(false);
                 
                 interactable.RemoveCancelInteractListener();
-                isInInteractableZone = false;
-                currentInteractableZone = new InteractableZoneData
-                {
-                    hit = default,
-                    gId = -1
-                };
+                ResetInteractableZone();
             }
 
             void InteractInputListener(InputAction.CallbackContext ctx)
@@ -92,8 +87,11 @@ namespace Code.Runtime.Battle.MonoBehavior.Player
                 PlayerInput.OnAPressed -= InteractInputListener;
                 PlayerInput.OnAPressed += ClosePopUp;
                 var interactable = currentInteractableZone.hit.transform.GetComponent<Interactable>();
+                interactable.RemoveCancelInteractListener();
+                
                 var uiManager = Core.GetMgr<UiManager>();
                 var battleMainUi = uiManager.GetUi<MainUi>(EBattleUi.MainUi);
+                battleMainUi.SetInteractTipsActive(false);
                 interactable.Interact(this);
                 
                 battleMainUi.SetItemPopup(((WeaponItem) interactable).weaponId);
@@ -106,6 +104,7 @@ namespace Code.Runtime.Battle.MonoBehavior.Player
                 var uiManager = Core.GetMgr<UiManager>();
                 var battleMainUi = uiManager.GetUi<MainUi>(EBattleUi.MainUi);
                 battleMainUi.SetItemPopupActive(false);
+                ResetInteractableZone();
             }
 
             if (Physics.SphereCast(transform.position, 0.3f, transform.forward, out var hit, 1f, m_IgnoreLayers))
@@ -130,6 +129,17 @@ namespace Code.Runtime.Battle.MonoBehavior.Player
                     }
                 }
             }
+        }
+        
+        private void ResetInteractableZone()
+        {
+            isInInteractableZone = false;
+            Debug.Log("Reset interactable Zone");
+            currentInteractableZone = new InteractableZoneData
+            {
+                hit = default,
+                gId = -1
+            };
         }
     }
 }
