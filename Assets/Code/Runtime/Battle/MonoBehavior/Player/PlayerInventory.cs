@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Code.Configuration;
+using Code.Runtime.Battle.Manager;
+using Code.Runtime.Battle.Ui;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -53,14 +55,15 @@ namespace Code.Runtime.Battle.MonoBehavior.Player
 
         private void ChangeRightWeapon(InputAction.CallbackContext ctx)
         {
-            if (m_PlayerCore.isInteracting) //玩家正在交互中
+            if (rightHandWeaponSlots.All(weaponId => weaponId == 0) ||//玩家没有装备任何武器
+                WeaponSlotManager.SwitchingWeapon ||
+                m_PlayerCore.isInteracting)//玩家正在交互中
+            {
+                m_PlayerCore.Core.GetMgr<UiManager>().GetUi<MainUi>(EBattleUi.MainUi)
+                    .DoChangeSlotPresentation(MainUi.EQuickSlot.RightWeapon);
                 return;
-            if (WeaponSlotManager.SwitchingWeapon)
-                return;
+            }
             
-            if (rightHandWeaponSlots.All(weaponId => weaponId == 0)) //玩家没有装备任何武器
-                return;
-
             var currentWeaponId = rightHandWeaponSlots[currentRightSlotIndex];
             if (currentWeaponId == 0) //如果玩家目前是空手状态
             {
@@ -89,11 +92,18 @@ namespace Code.Runtime.Battle.MonoBehavior.Player
             }
             m_PlayerCore.AnimatorController.PlayTargetAnimation(
                 string.Format(WeaponConfig.D[RightWeapon].OneHandEquipAnimation, "R"), false);
+            m_PlayerCore.Core.GetMgr<UiManager>().GetUi<MainUi>(EBattleUi.MainUi)
+                .ChangeQuickSlot(RightWeapon, 0, MainUi.EQuickSlot.RightWeapon);
+            m_PlayerCore.Core.GetMgr<UiManager>().GetUi<MainUi>(EBattleUi.MainUi)
+                .DoChangeSlotPresentation(MainUi.EQuickSlot.RightWeapon);
+            
             StartCoroutine(LoadRightWeapon());
         }
 
         private void ChangeLeftWeapon(InputAction.CallbackContext ctx)
         {
+            m_PlayerCore.Core.GetMgr<UiManager>().GetUi<MainUi>(EBattleUi.MainUi)
+                .DoChangeSlotPresentation(MainUi.EQuickSlot.LeftWeapon);
             if (m_PlayerCore.isInteracting) //玩家正在交互中
                 return;
             if (WeaponSlotManager.SwitchingWeapon)
@@ -131,6 +141,8 @@ namespace Code.Runtime.Battle.MonoBehavior.Player
             
             m_PlayerCore.AnimatorController.PlayTargetAnimation(
                 string.Format(WeaponConfig.D[LeftWeapon].OneHandEquipAnimation, "L"), false);
+            m_PlayerCore.Core.GetMgr<UiManager>().GetUi<MainUi>(EBattleUi.MainUi)
+                .ChangeQuickSlot(RightWeapon, 0, MainUi.EQuickSlot.RightWeapon);
             StartCoroutine(LoadLeftWeapon());
         }
         
